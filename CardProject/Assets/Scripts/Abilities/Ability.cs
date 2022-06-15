@@ -5,6 +5,8 @@ using UnityEngine;
 public abstract class Ability : MonoBehaviour
 {
     // DETERMINES THE PLAYER WHOM THE ABILITY IS TRIGGERED FROM
+
+    // TODO: FIND A WAY TO SET THIS
     [SerializeField] TurnPlayer _player;
     // CONDITIONS FOR THE ABILITIES COROUTINE TO BE ACTIVATED
     [SerializeField] Condition[] _conditions;
@@ -25,10 +27,10 @@ public abstract class Ability : MonoBehaviour
             }
         }
         // CHECKS IF THERE IS ENOUGH MANA TO CAST THE ABILITY
-        if(Manager.Singleton.currentMana[_player] - manaCost < 0)
-        {
-            return false;
-        }
+        //if(Manager.Singleton.currentMana[_player] - manaCost < 0)
+        //{
+           // return false;
+        //}
         if (_mandatoryChain && _followUp != null){
             return _followUp.CheckConditions();
         }
