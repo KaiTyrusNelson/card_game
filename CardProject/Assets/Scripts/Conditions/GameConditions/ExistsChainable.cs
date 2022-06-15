@@ -10,11 +10,16 @@ public static class ExistsChainable
         {
             for (int j =0; j<3; j++){
                 // TODO: THIS WILL NEED TO BE CHANGES AS MORE ABILITY TYPES ARE ADDED
-                if (Manager.Singleton.PlayerBoards[_player].GetAt(i, j) !=null){
-                    if (Manager.Singleton.PlayerBoards[_player].GetAt(i, j).Abilities.Length > 0)
+                Character checkCharacter = Manager.Singleton.PlayerBoards[_player].GetAt(i, j);
+                if (checkCharacter != null )
+                {
+                    foreach (Ability abl in checkCharacter.Abilities)
                     {
-                        Debug.Log($"Found a chainable condition Board Location {i}, {j}");
-                        return true;
+                        if (abl.CheckConditions())
+                        {
+                            Debug.Log("A true condition has been found.");
+                            return true;
+                        }
                     }
                 }
             }

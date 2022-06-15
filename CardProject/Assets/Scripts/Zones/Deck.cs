@@ -12,7 +12,6 @@ public class Deck : MonoBehaviour
     
 
     public void DrawCard(){
-        Debug.Log(cards.Count);
         Character c = cards[cards.Count-1];
 
         if( !hand.IsFullHand() ){

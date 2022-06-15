@@ -425,7 +425,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 6.4, y: 8}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -449,3 +449,4 @@ MonoBehaviour:
   manaCost: 2
   attackTextBox: {fileID: 3042492365398784855}
   defenseTextBox: {fileID: 3042492364987581407}
+  _abilities: []

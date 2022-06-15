@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PromptResponse : StackEvent
+public class ChainRequestObject : StackEvent
 {
     // TO DO, PROMPT CONDITIONS
     [SerializeField] TurnPlayer _player;

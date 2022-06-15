@@ -81,7 +81,13 @@ public class Manager : MonoBehaviour
     /*
     */
     #region EventStackFunctions
-    Stack<StackEvent> eventStack;
+    public Stack<StackEvent> EventStack;
+
+    // TO DO: ADDS AN APPROPRIATE MESSAGE TO THE STACK
+    public void StackPush(StackEvent evt)
+    {
+
+    }
     #endregion
 
     public void Awake(){
@@ -109,7 +115,7 @@ public class Manager : MonoBehaviour
         PlayerDecks[TurnPlayer.Player1] = playerOneDeck;
         PlayerDecks[TurnPlayer.Player2] = playerTwoDeck;
 
-        eventStack = new Stack<StackEvent>();
+        EventStack = new Stack<StackEvent>();
     }
 
     public void Start()
@@ -125,16 +131,16 @@ public class Manager : MonoBehaviour
     }
 
 
-    [SerializeField] PromptResponse BasicPromptResponseObject;
+    [SerializeField] ChainRequestObject BasicPromptResponseObject;
     IEnumerator GameLoop(){
         while(true){
             BeginTurn(currentPlayer);
             while(true){
                 ///<summary> THE FIRST THING WE DO IS BEGIN TO POP OPEN THE STACK<summary>
-                while(eventStack.Count > 0)
+                while(EventStack.Count > 0)
                 {
                     // STARTS THE TOP STACKS ROUTINE
-                    yield return StartCoroutine(eventStack.Pop().Activate());
+                    yield return StartCoroutine(EventStack.Pop().Activate());
                 }
                 ///<summary> NORMAL ACTIONS (SUMMONING AND ENDING TURNS)<summary>
                 yield return null;
@@ -149,9 +155,9 @@ public class Manager : MonoBehaviour
                     {
 
                         // MAKE FUNCTION FOR PUSHING EVENT STACK OBJECTS AND REMOVING, PARENT THEM, DELETE THEM ECT.
-                        PromptResponse pushObject = Instantiate(BasicPromptResponseObject, transform.position, transform.rotation);
+                        ChainRequestObject pushObject = Instantiate(BasicPromptResponseObject, transform.position, transform.rotation);
                         pushObject.Player = OppositePlayer(currentPlayer);
-                        eventStack.Push(pushObject);
+                        EventStack.Push(pushObject);
                     }
                 }
                 if(Players[currentPlayer].EndCall())
@@ -163,6 +169,8 @@ public class Manager : MonoBehaviour
             ChangeTurn();
         }
     }
+
+
 
     // CHECKS IF A CARD IS SUMMONABLE FROM A CURRENT LOCATION
     bool checkSummonable(TurnPlayer player, int hand_location, int x, int y)
@@ -184,7 +192,7 @@ public class Manager : MonoBehaviour
             return false;
         }
         // SUMMONING CANNOT BE DONE VIA CHAIN
-        if(eventStack.Count != 0){
+        if(EventStack.Count != 0){
             Debug.Log("Cannot perform a summon during a chain.");
             return false;
         }
