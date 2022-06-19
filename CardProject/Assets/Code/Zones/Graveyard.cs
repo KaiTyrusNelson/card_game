@@ -6,6 +6,7 @@ using System.Collections.Generic;
 public class Graveyard: MonoBehaviour{
     [SerializeField] List<Character> _cards;
     public List<Character> Cards {get=>_cards; set{_cards=value;}}
+    [SerializeField] public Player Owner; 
 
     public void AddCard(Character c)
     {

@@ -5,17 +5,56 @@ using RiptideNetworking;
 
 public class Player : MonoBehaviour
 {
+
+
+    //TODO: CONVERT THIS TO TURNPLAYER TYPE ENUM
+    [SerializeField]TurnPlayer _playerId;
+    public TurnPlayer PlayerId {get => _playerId;}
+
+    /// <summary> Contains all properties of the players, their gamespaces, ect. <summary>
+    #region Definitions
+    [SerializeField] public GameBoard PlayerBoard;
+    [SerializeField] public Hand PlayerHand;
+    [SerializeField] public Graveyard PlayerGraveyard;
+    [SerializeField] public Deck PlayerDeck;
+    [SerializeField] public int CurrentMana;
+    [SerializeField] public int MaxMana;
+
+    #endregion
+
+    /// <summary> Basic functions controlling the base flow of the game <summary>
+    #region GameFlowFunctions
+
+    public void DrawCard(){
+        Character c = PlayerDeck.Cards[PlayerDeck.Cards.Count-1];
+        if( !PlayerHand.IsFullHand() ){
+            PlayerHand.AddCard(c);            
+            PlayerDeck.Cards.RemoveAt(PlayerDeck.Cards.Count-1);
+        }
+    }
+
+    public void CleanUpBoard(){
+        for (int i =0; i < 2; i++)
+        {
+            for (int j=0; j < 3; j++)
+            {
+                if (PlayerBoard.GetAt(i,j)!=null){
+                if (PlayerBoard.GetAt(i, j).Hp <=0){
+                    PlayerBoard.SendToGYAt(i,j);
+                }
+                }
+            }
+        }
+    }
+    #endregion
+    /// <summary> This region is responsible for processing messages between the clients and the server regarding the player object <summary>
+    #region Messages
     // stores the information and awaits results
     ushort mostRecent = 0;
     int hand_location;
     int board_x;
     int board_y;
     int selection;
-
-    //TODO: CONVERT THIS TO TURNPLAYER TYPE ENUM
-    [SerializeField]TurnPlayer _playerId;
-    public TurnPlayer PlayerId {get => _playerId;}
-
     public int SelectionCall( int len ){
         // IF THE SELECTION CALL HASNT BEEN CALLED
         if (mostRecent != (ushort)ClientToServer.selectionCall){
@@ -83,16 +122,15 @@ public class Player : MonoBehaviour
         mostRecent = 0;
     }
 
-    #region Messages
     // SUMMON CARD FROM HAND
     [MessageHandler((ushort)ClientToServer.summonMessage)]
     private static void summonMessage(ushort fromClientId, Message message)
     {
         Debug.Log("RECEIVED SUMMON MESSAGE FROM CLIENT");
-        Manager.Singleton.Players[(TurnPlayer)fromClientId].mostRecent = (ushort) ClientToServer.summonMessage;
-        Manager.Singleton.Players[(TurnPlayer)fromClientId].hand_location = message.GetInt();
-        Manager.Singleton.Players[(TurnPlayer)fromClientId].board_x = message.GetInt();
-        Manager.Singleton.Players[(TurnPlayer)fromClientId].board_y = message.GetInt();
+        Manager.Players[(TurnPlayer)fromClientId].mostRecent = (ushort) ClientToServer.summonMessage;
+        Manager.Players[(TurnPlayer)fromClientId].hand_location = message.GetInt();
+        Manager.Players[(TurnPlayer)fromClientId].board_x = message.GetInt();
+        Manager.Players[(TurnPlayer)fromClientId].board_y = message.GetInt();
     }
 
     // END MESSAGES CAN END TURNS
@@ -100,7 +138,7 @@ public class Player : MonoBehaviour
     private static void endTurnMessage(ushort fromClientId, Message message)
     {
         Debug.Log("RECEIVED END TURN MESSAGE FROM CLIENT");
-        Manager.Singleton.Players[(TurnPlayer)fromClientId].mostRecent = (ushort) ClientToServer.end;
+        Manager.Players[(TurnPlayer)fromClientId].mostRecent = (ushort) ClientToServer.end;
     }
 
     // END MESSAGES CHAIN RESPONSE
@@ -108,7 +146,7 @@ public class Player : MonoBehaviour
     private static void dontChainMessage(ushort fromClientId, Message message)
     {
         Debug.Log("RECEIVED DON'T CHAIN MESSAGE FROM CLIENT");
-        Manager.Singleton.Players[(TurnPlayer)fromClientId].mostRecent = (ushort) ClientToServer.dontChain;
+        Manager.Players[(TurnPlayer)fromClientId].mostRecent = (ushort) ClientToServer.dontChain;
     }
 
     // CHAIN CONFIRMATION MESSAGE
@@ -116,15 +154,15 @@ public class Player : MonoBehaviour
     private static void chainMessage(ushort fromClientId, Message message)
     {
         Debug.Log("RECEIVED CHAIN MESSAGE FROM CLIENT");
-        Manager.Singleton.Players[(TurnPlayer)fromClientId].mostRecent = (ushort) ClientToServer.chain;
+        Manager.Players[(TurnPlayer)fromClientId].mostRecent = (ushort) ClientToServer.chain;
     }
 
     [MessageHandler((ushort)ClientToServer.selectionCall)]
     private static void selectionCallMessage(ushort fromClientId, Message message)
     {
         Debug.Log("RECEIVED SELECTION CALL MESSAGE FROM CLIENT");
-        Manager.Singleton.Players[(TurnPlayer)fromClientId].mostRecent = (ushort) ClientToServer.selectionCall;
-        Manager.Singleton.Players[(TurnPlayer)fromClientId].selection = message.GetInt();
+        Manager.Players[(TurnPlayer)fromClientId].mostRecent = (ushort) ClientToServer.selectionCall;
+        Manager.Players[(TurnPlayer)fromClientId].selection = message.GetInt();
     }
 
 

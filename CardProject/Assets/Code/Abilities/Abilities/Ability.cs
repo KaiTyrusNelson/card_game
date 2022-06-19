@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+// TODO: CREATE MULTIPLE KINDS OF EFFECTS
 public abstract class Ability : MonoBehaviour
 {
     #region Parameters
@@ -27,7 +29,7 @@ public abstract class Ability : MonoBehaviour
         // INFORMS THE CLIENTS WHO IS PLAYING THEIR CARD
         ResponseMessages.SendActingPlayer(AssociatedCard.Player);
         // SUBTRACTS THE MANA COST
-        Manager.Singleton.currentMana[AssociatedCard.Player]-=manaCost;
+        Manager.Players[AssociatedCard.Player].CurrentMana-=manaCost;
         // ACTIVATES THE ABILITY
         yield return StartCoroutine(Active());
         // INFORMS USERS OF THE RESOLVE EFFECT
@@ -56,7 +58,7 @@ public abstract class Ability : MonoBehaviour
             }
         }
         // CHECKS IF THERE IS ENOUGH MANA TO CAST THE ABILITY
-        if(Manager.Singleton.currentMana[_associatedCard.Player] - manaCost < 0)
+        if(Manager.Players[_associatedCard.Player].CurrentMana - manaCost < 0)
         {
             Debug.Log("Mana condition failed");
             return false;

@@ -5,7 +5,7 @@ using RiptideNetworking;
 
 public class GameBoard : MonoBehaviour
 {
-    [SerializeField] Graveyard _gy;
+    [SerializeField] public Player Owner; 
     [SerializeField] TurnPlayer _player;
     [SerializeField] Character[] row0 = new Character[3];
     [SerializeField] Character[] row1 = new Character[3];
@@ -18,6 +18,7 @@ public class GameBoard : MonoBehaviour
         x = x%2;
         if (x==0) row0[y] = c;
         if (x==1) row1[y] = c;
+        c.transform.SetParent(this.transform);
         sendSummonMessage(c, x, y, _player);
     }
 
@@ -33,23 +34,11 @@ public class GameBoard : MonoBehaviour
     {
         if (GetAt(x,y)!=null)
         {
-            _gy.AddCard(GetAt(x,y));
+            Owner.PlayerGraveyard.AddCard(GetAt(x,y));
             RemoveAt(x, y);
         }
     }
-    public void CleanUp(){
-        for (int i =0; i < 2; i++)
-        {
-            for (int j=0; j < 3; j++)
-            {
-                if (GetAt(i,j)!=null){
-                if (GetAt(i, j).Hp <=0){
-                    SendToGYAt(i,j);
-                }
-                }
-            }
-        }
-    }
+    
     #region Messages
     /// <summary> Designed to communicate when a card has been summoned <summary>
     public static void sendSummonMessage(Character c, int x, int y, TurnPlayer player){

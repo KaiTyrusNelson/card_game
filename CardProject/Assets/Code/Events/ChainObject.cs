@@ -25,7 +25,7 @@ public class ChainObject : StackEvent
         {
             for (int j =0; j<3; j++){
                 // TODO: THIS WILL NEED TO BE CHANGES AS MORE ABILITY TYPES ARE ADDED
-                Character checkCharacter = Manager.Singleton.PlayerBoards[_player].GetAt(i, j);
+                Character checkCharacter = Manager.Players[_player].PlayerBoard.GetAt(i, j);
                 if (checkCharacter != null )
                 {
                     foreach (Ability abl in checkCharacter.Abilities)
@@ -44,7 +44,7 @@ public class ChainObject : StackEvent
         Debug.Log($"Asking Player how they would like to respond to the following");
         while(true){
             yield return null;
-            select = Manager.Singleton.Players[_player].SelectionCall(_abl.Count);
+            select = Manager.Players[_player].SelectionCall(_abl.Count);
             if (select != -1)
             {
                 yield return StartCoroutine(_abl[select].Activate());

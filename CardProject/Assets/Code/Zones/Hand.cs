@@ -7,7 +7,7 @@ public class Hand : MonoBehaviour
 {
     [SerializeField] List<Character> cards;
     [SerializeField] public int MaxSize;
-    [SerializeField] public GameBoard Board;
+    [SerializeField] public Player Owner; 
     [SerializeField] public TurnPlayer Player;
 
     public int GetCount(){
@@ -30,7 +30,7 @@ public class Hand : MonoBehaviour
         cards.Add(c);
         // INFORMS THE CLIENTS ABOUT THE DRAWN CARDS--
         SendSelfDrawMessage(Player, c);
-        SendOpponentDrawMessage(Manager.OppositePlayer(Player));
+        SendOpponentDrawMessage(Player.OppositePlayer());
     }
 
     public void RemoveCard(int position)
@@ -38,14 +38,13 @@ public class Hand : MonoBehaviour
         cards.RemoveAt(position);
         // INFORMS THE CLIENTS ABOUT THE REMOVED CARD
         SendSelfRemoveCardMessage(Player, position);
-        SendOpponentRemoveCardMessage(Manager.OppositePlayer(Player), position);
+        SendOpponentRemoveCardMessage(Player.OppositePlayer(), position);
     }
     public void PlayCardFromPosition(int position, int x, int y)
     {
         Character c = cards[position];
         cards.RemoveAt(position);
-        Board.SetAt(c,x,y);
-        c.transform.SetParent(Board.transform);
+        Owner.PlayerBoard.SetAt(c,x,y);
     }   
 
     #region Messages

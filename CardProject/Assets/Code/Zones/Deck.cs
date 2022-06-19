@@ -5,21 +5,12 @@ using UnityEngine;
 
 public class Deck : MonoBehaviour
 {
-    [SerializeField]
-    List<Character> cards;
-    [SerializeField]
-    Hand hand;
-    [SerializeField]
-    TurnPlayer _player;
+    [SerializeField] List<Character> cards;
+    public List<Character> Cards {get =>cards; set{cards=value;}}
+    [SerializeField] public Player Owner; 
+    [SerializeField] TurnPlayer _player;
 
-    public void DrawCard(){
-        Character c = cards[cards.Count-1];
 
-        if( !hand.IsFullHand() ){
-            hand.AddCard(c);            
-            cards.RemoveAt(cards.Count-1);
-        }
-    }
     public void BeginGame(){
         cards.Shuffle();
         // ON THE START ALL PREFAB OBJECTS NEED TO REPLACED WITH REAL OBJECTS
@@ -28,6 +19,11 @@ public class Deck : MonoBehaviour
             cards[i].transform.SetParent(this.transform);
             cards[i].Player = _player;
         }
+    }
+
+    public void Shuffle()
+    {
+        cards.Shuffle();
     }
 
     public void Display() // FOR TESTING PURPOSES

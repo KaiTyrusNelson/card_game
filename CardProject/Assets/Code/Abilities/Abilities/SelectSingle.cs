@@ -17,7 +17,7 @@ public class SelectSingle : Ability
             for (int i = 0; i < 2; i++)
             {
                 for (int j =0; j<3; j++){
-                    Character checkCharacter = Manager.Singleton.PlayerBoards[player].GetAt(i, j);
+                    Character checkCharacter = Manager.Players[player].PlayerBoard.GetAt(i, j);
                     if (checkCharacter != null )
                     {
                         return true;
@@ -37,9 +37,9 @@ public class SelectSingle : Ability
             for (int i = 0; i < 2; i++)
             {
                 for (int j =0; j<3; j++){
-                    if (Manager.Singleton.PlayerBoards[player].GetAt(i, j) != null )
+                    if (Manager.Players[player].PlayerBoard.GetAt(i, j) != null )
                     {
-                        targets.Add(Manager.Singleton.PlayerBoards[player].GetAt(i, j));
+                        targets.Add(Manager.Players[player].PlayerBoard.GetAt(i, j));
                     }
                 }
             }
@@ -49,7 +49,7 @@ public class SelectSingle : Ability
         Debug.Log($"Asking Player who they would like to target {targets}");
         while(true){
             yield return null;
-            select = Manager.Singleton.Players[AssociatedCard.Player].SelectionCall(targets.Count);
+            select = Manager.Players[AssociatedCard.Player].SelectionCall(targets.Count);
             if (select != -1)
             {
                 // APPLIES EFFECT TO DESIRED TARGETS

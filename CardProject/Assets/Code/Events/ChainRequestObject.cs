@@ -22,13 +22,13 @@ public class ChainRequestObject : StackEvent
         while(true){
             yield return null;
             // IF AN END MESSAGE IS SENT, THEY DO NOT WISH TO CHAIN
-            if(Manager.Singleton.Players[_player].DontChainCall())
+            if(Manager.Players[_player].DontChainCall())
             {
                 Debug.Log("Player has chosen not to chain");
                 break;
             }
             // IF THE CHAIN CALL MESSAGE IS SENT WE WILL ENTER A CHAIN EVENT
-            if(Manager.Singleton.Players[_player].ChainCall())
+            if(Manager.Players[_player].ChainCall())
             {
                 Debug.Log("Player has chosen to chain");
                 // CREATES A CHAIN CALL AWAITING THAT PLAYERS RESPONSE

@@ -12,7 +12,7 @@ public static class ExistsChainable
         {
             for (int j =0; j<3; j++){
                 // TODO: THIS WILL NEED TO BE CHANGES AS MORE ABILITY TYPES ARE ADDED
-                Character checkCharacter = Manager.Singleton.PlayerBoards[_player].GetAt(i, j);
+                Character checkCharacter = Manager.Players[_player].PlayerBoard.GetAt(i, j);
                 if (checkCharacter != null )
                 {
                     foreach (Ability abl in checkCharacter.Abilities)
