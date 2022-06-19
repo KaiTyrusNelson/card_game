@@ -11,6 +11,9 @@ public class MessageSender : MonoBehaviour
     [SerializeField] TMP_InputField _inputSummon1;
     [SerializeField] TMP_InputField _inputSummon2;
     [SerializeField] TMP_InputField _inputSummon3;
+    [SerializeField] TMP_InputField _selectionMessage;
+    
+    static TMP_InputField selectionMessage;
     static TMP_InputField inputSummon1;
     static TMP_InputField inputSummon2;
     static TMP_InputField inputSummon3;
@@ -29,6 +32,7 @@ public class MessageSender : MonoBehaviour
         inputSummon1 = _inputSummon1;
         inputSummon2 = _inputSummon2;
         inputSummon3 = _inputSummon3;
+        selectionMessage = _selectionMessage;
     }
 
 
@@ -47,6 +51,12 @@ public class MessageSender : MonoBehaviour
     public static void ChainMessage()
     {
         Message m = Message.Create(MessageSendMode.reliable, (ushort)ClientToServer.chain);
+        NetworkManager.Singleton.Client.Send(m);
+    }
+
+    public static void SelectionMessage(){
+        Message m = Message.Create(MessageSendMode.reliable, (ushort)ClientToServer.selectionCall);
+        m.Add(Int32.Parse(selectionMessage.text.ToString()));
         NetworkManager.Singleton.Client.Send(m);
     }
 }

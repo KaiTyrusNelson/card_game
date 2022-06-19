@@ -7,7 +7,8 @@ public enum ClientToServer{
     summonMessage=1,
     end,
     chain,
-    dontChain
+    dontChain,
+    selectionCall
 };
 
 

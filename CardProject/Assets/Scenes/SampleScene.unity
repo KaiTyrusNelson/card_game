@@ -207,6 +207,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2671b6a1f4420f54aac8517df7d07558, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _player: 0
   row0:
   - {fileID: 0}
   - {fileID: 0}
@@ -313,8 +314,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cards: []
-  maxSize: 6
-  board: {fileID: 819906111}
+  MaxSize: 6
+  Board: {fileID: 819906111}
+  Player: 1
 --- !u!4 &269415495
 Transform:
   m_ObjectHideFlags: 0
@@ -381,6 +383,7 @@ MonoBehaviour:
   - {fileID: 3042492365951957778, guid: 120030a0f0cf81049973ed52567ef13d, type: 3}
   - {fileID: 3042492365951957778, guid: 0eb11087523cf67439028674520ad6b2, type: 3}
   hand: {fileID: 819227351}
+  _player: 2
 --- !u!4 &295345213
 Transform:
   m_ObjectHideFlags: 0
@@ -718,6 +721,7 @@ MonoBehaviour:
   - {fileID: 3042492365951957778, guid: b22194fc7f1880a4f97cea5bea9235c5, type: 3}
   - {fileID: 3042492365951957778, guid: b22194fc7f1880a4f97cea5bea9235c5, type: 3}
   hand: {fileID: 269415494}
+  _player: 1
 --- !u!1 &666212695
 GameObject:
   m_ObjectHideFlags: 0
@@ -1046,8 +1050,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cards: []
-  maxSize: 6
-  board: {fileID: 131090133}
+  MaxSize: 6
+  Board: {fileID: 131090133}
+  Player: 2
 --- !u!4 &819227352
 Transform:
   m_ObjectHideFlags: 0
@@ -1092,6 +1097,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2671b6a1f4420f54aac8517df7d07558, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _player: 0
   row0:
   - {fileID: 0}
   - {fileID: 0}
