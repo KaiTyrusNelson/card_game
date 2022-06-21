@@ -25,6 +25,40 @@ public class Character : MonoBehaviour
     public TurnPlayer Player{ get => _player; set{ _player = value;}}
     [SerializeField] ushort _manaCost;
     public ushort ManaCost {get=> _manaCost; set{ _manaCost  =  value;}}
+
+    // DETERMINES IF THE CHARACTER HAS ATTACKED THIS TURN
+    public bool HasAttacked = false;
+    #endregion
+
+
+    #region Functions
+    public void TakeDamage(ushort damage){
+        _hp = (ushort)Math.Max(0, _hp - damage);
+    }
+
+    public bool AttackCharacter(Character other)
+    {
+        if (!HasAttacked)
+        {
+            other.TakeDamage(this.Attack);
+            this.TakeDamage(other.Attack);
+            HasAttacked = true;
+
+            // TODO: ADD ON COMBAT EFFECTS
+            return true;
+        }
+        Debug.Log("This character cannot attack");
+        return false;
+    }
+
+    public void ResetAttacked()
+    {
+        HasAttacked = false;
+    }
+
+    #endregion
+
+    #region VisualizationFunctions
     [SerializeField] TMP_Text attackTextBox;
     [SerializeField] TMP_Text defenseTextBox;
     
