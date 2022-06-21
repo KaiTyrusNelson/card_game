@@ -14,12 +14,15 @@ public enum ClientToServer{
     // MESSAGE FOR WHEN A CLIENT DOESN'T WISH TO CHAIN
     dontChain,
     // MESSAGE FOR WHEN A CLIENT MAKES A SELECTION FROM A LIST
-    selectionCall
+    selectionCall,
+    // ATTACK MESSAGE
+    attack
 };
 
 public enum ServerToClient{
     // MESSAGE FOR WHEN A CARD IS SUMMONED ONTO THE BOARD
     summonMessage = 1,
+    summonMessageOpponent,
     // MESSAGE WHEN YOUR OPPONENT DRAWS A CARD TODO
     opponentDrawCard,
     // MESSAGE WHEN YOU DRAW A CARD TODO
@@ -34,6 +37,8 @@ public enum ServerToClient{
     sendActingPlayer,
     // MESSAGE FOR WHEN WE REQUEST THE CLIENT TO MAKE A SELECTION TODO
     selectionRequest,
+    // MESSAGE CONFIRMING PLAYER IDENTITY
+    playerIdentityPacket,
 }
 
 public class NetworkManagerV2 : MonoBehaviour
@@ -93,4 +98,6 @@ public class NetworkManagerV2 : MonoBehaviour
     {
         Debug.Log("Player has left");
     }
+
+    
 }

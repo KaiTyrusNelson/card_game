@@ -5,6 +5,8 @@ using TMPro;
 using RiptideNetworking;
 using System;
 
+
+
 public class MessageSender : MonoBehaviour
 {
     #region summoningCommands
@@ -12,6 +14,12 @@ public class MessageSender : MonoBehaviour
     [SerializeField] TMP_InputField _inputSummon2;
     [SerializeField] TMP_InputField _inputSummon3;
     [SerializeField] TMP_InputField _selectionMessage;
+
+    [SerializeField] TMP_InputField _attackMessage1;
+    [SerializeField] TMP_InputField _attackMessage2;
+
+    static TMP_InputField attackMessage1;
+    static TMP_InputField attackMessage2;
     
     static TMP_InputField selectionMessage;
     static TMP_InputField inputSummon1;
@@ -33,6 +41,8 @@ public class MessageSender : MonoBehaviour
         inputSummon2 = _inputSummon2;
         inputSummon3 = _inputSummon3;
         selectionMessage = _selectionMessage;
+        attackMessage1 = _attackMessage1;
+        attackMessage2 = _attackMessage2;
     }
 
 
@@ -57,6 +67,13 @@ public class MessageSender : MonoBehaviour
     public static void SelectionMessage(){
         Message m = Message.Create(MessageSendMode.reliable, (ushort)ClientToServer.selectionCall);
         m.Add(Int32.Parse(selectionMessage.text.ToString()));
+        NetworkManager.Singleton.Client.Send(m);
+    }
+
+    public static void AttackMessage(){
+        Message m = Message.Create(MessageSendMode.reliable, (ushort)ClientToServer.attack);
+        m.Add(Int32.Parse(attackMessage1.text.ToString()));
+        m.Add(Int32.Parse(attackMessage2.text.ToString()));
         NetworkManager.Singleton.Client.Send(m);
     }
 }

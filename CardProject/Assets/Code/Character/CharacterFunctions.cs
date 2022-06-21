@@ -1,4 +1,5 @@
 using UnityEngine;
+
 public static class CharacterFunctions
 {
     public static bool IsOnBoard(Character c)
@@ -17,4 +18,23 @@ public static class CharacterFunctions
         Debug.Log("Character has not been found on board");
         return false;
     }
+
+
+    public static Tuple FindLocationOnBoard(this Character c)
+    {
+        GameBoard playerBoard = Manager.Players[c.Player].PlayerBoard;
+        // CYCLES TO SEE IF THE CHARACTER IS ON THE BOARD 
+        for (int i = 0; i < 2; i++){
+            for (int j = 0; j<3; j++){
+                if(playerBoard.GetAt(i,j) == c)
+                {
+                    Tuple newTuple = new Tuple();
+                    newTuple.x = i;
+                    newTuple.y = j;
+                    return newTuple;
+                }
+            }
+        }
+        return null;
+    } 
 }

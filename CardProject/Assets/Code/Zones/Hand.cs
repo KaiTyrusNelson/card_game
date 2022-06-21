@@ -43,7 +43,7 @@ public class Hand : MonoBehaviour
     public void PlayCardFromPosition(int position, int x, int y)
     {
         Character c = cards[position];
-        cards.RemoveAt(position);
+        RemoveCard(position);
         Owner.PlayerBoard.SetAt(c,x,y);
     }   
 
@@ -57,6 +57,9 @@ public class Hand : MonoBehaviour
         public static void SendSelfDrawMessage(TurnPlayer id, Character c){
             Message m = Message.Create(MessageSendMode.reliable, (ushort)ServerToClient.selfDrawCard);
             m.Add(c.Id);
+            m.Add(c.Hp);
+            m.Add(c.Attack);
+            m.Add(c.ManaCost);
             NetworkManagerV2.Instance.server.Send(m, (ushort)id);
         }
         /// <summmary> informs the client a card has been removed from their hand <summary>

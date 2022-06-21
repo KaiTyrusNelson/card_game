@@ -2,14 +2,42 @@ using RiptideNetworking;
 using RiptideNetworking.Utils;
 using System;
 using UnityEngine;
-
 public enum ClientToServer{
+    // MESSAGE FOR WHEN A CLIENT REQUESTS A SUMMON
     summonMessage=1,
+    // MESSAGE FOR WHEN A CLIENT REQUESTS TO END THEIR TURN
     end,
+    // MESSAGE FOR WHEN A CLIENT WISHES TO CHAIN
     chain,
+    // MESSAGE FOR WHEN A CLIENT DOESN'T WISH TO CHAIN
     dontChain,
-    selectionCall
+    // MESSAGE FOR WHEN A CLIENT MAKES A SELECTION FROM A LIST
+    selectionCall,
+    // ATTACK MESSAGE
+    attack
 };
+
+public enum ServerToClient{
+    // MESSAGE FOR WHEN A CARD IS SUMMONED ONTO THE BOARD
+    summonMessage = 1,
+    summonMessageOpponent,
+    // MESSAGE WHEN YOUR OPPONENT DRAWS A CARD TODO
+    opponentDrawCard,
+    // MESSAGE WHEN YOU DRAW A CARD TODO
+    selfDrawCard,
+    // MESSAGE FOR WHEN YOUR OPPONENT PLAYS A CARD FROM THEIR HAND TODO
+    opponentLoseCard,
+    // MESSAGE FOR WHEN YOU PLAY A CARD FROM YOUR HAND TODO
+    selfLoseCard,
+    // MESSAGE FOR WHEN WE REQUEST IF A CLIENT WISHES TO CHAIN AN EFFECT TODO
+    chainRequest,
+    // MESSAGE TO BE SENT TO OTHER CLIENT INFORMING THEY ARE WAITING FOR A RESPONSE FROM THE OTHER PLAYER
+    sendActingPlayer,
+    // MESSAGE FOR WHEN WE REQUEST THE CLIENT TO MAKE A SELECTION TODO
+    selectionRequest,
+    // MESSAGE CONFIRMING PLAYER IDENTITY
+    playerIdentityPacket,
+}
 
 
     public class NetworkManager : MonoBehaviour

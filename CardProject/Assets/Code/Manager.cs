@@ -110,6 +110,22 @@ public class Manager : MonoBehaviour
                     ResponseMessages.SendActingPlayer(currentPlayer);
                 }
 
+                // CHECKS IF THEY WANT TO ATTACK
+                Tuple attackMessage = Players[currentPlayer].AttackCall();
+                // TRY THE ATTACK OUT
+                if (attackMessage !=null)
+                {
+                    TryAttackPosition(currentPlayer, attackMessage.x, attackMessage.y);
+                    if (ExistsChainable.Check(currentPlayer.OppositePlayer()))
+                    {
+                        // MAKE FUNCTION FOR PUSHING EVENT STACK OBJECTS AND REMOVING, PARENT THEM, DELETE THEM ECT.
+                        ChainRequestObject pushObject = Instantiate(BasicPromptResponseObject, transform.position, transform.rotation);
+                        pushObject.Player = currentPlayer.OppositePlayer();
+                        StackPush(pushObject);
+                    }
+                    goto end;
+                }
+
                 // TO DO, CHANGE SO AFTER ONE OF THESE NORMAL EVENTS ARE CALLED, IT WILL JUMP IMMEDIATLEY TO STACK RESOLUTION
                 if( Players[currentPlayer].SummonCall() == true)
                 {
@@ -122,14 +138,17 @@ public class Manager : MonoBehaviour
                         pushObject.Player = currentPlayer.OppositePlayer();
                         StackPush(pushObject);
                     }
+                    goto end;
                 }
 
-                // TODO: ADD BATTLING, ASWELL AS GRAVEYARD
+                end:
                 if(Players[currentPlayer].EndCall())
                 {
                     Debug.Log("end turn call triggered");
                     break;
                 }
+                
+                
             }
             ChangeTurn();
         }
@@ -143,9 +162,22 @@ public class Manager : MonoBehaviour
             StackEvent evt = EventStack.Pop();
             yield return StartCoroutine(evt.Activate());
             StackRemove(evt);
+            // CLEAN UP THE BOARD
+            Players[currentPlayer].CleanUpBoard();
+            Players[currentPlayer.OppositePlayer()].CleanUpBoard();
+        }
+    }
 
-            Players[currentPlayer].CleanUpBoard();
-            Players[currentPlayer].CleanUpBoard();
+    [SerializeField] AttackEvent attackEvent;
+    public void TryAttackPosition(TurnPlayer player, int x, int y)
+    {
+        // THIS NEEDS TO BE A CHAIN EVENT
+        Character attacking = Players[player].PlayerBoard.GetAt(x,y);
+        if (attacking!=null){
+            AttackEvent evt = Instantiate(attackEvent,transform.position, transform.rotation);
+            evt.AttackingCharacter = attacking;
+            StackPush(evt);
+            // TODO: SEND ATTACK MESSAGE
         }
     }
 

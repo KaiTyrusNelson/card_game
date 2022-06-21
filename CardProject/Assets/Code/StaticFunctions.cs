@@ -10,3 +10,7 @@ public static class FUNCTIONS{
         return TurnPlayer.Player1;
     }
 }
+public class Tuple
+{
+    public int x, y;
+}

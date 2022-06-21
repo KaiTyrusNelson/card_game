@@ -48,8 +48,14 @@ public class GameBoard : MonoBehaviour
         m.Add(c.Id);
         m.Add(x);
         m.Add(y);
-        m.Add((ushort)player);
-        NetworkManagerV2.Instance.server.SendToAll(m);
+        Message m2 = Message.Create(MessageSendMode.reliable, (ushort)ServerToClient.summonMessageOpponent);
+        m2.Add(c.Hp);
+        m2.Add(c.Attack);
+        m2.Add(c.Id);
+        m2.Add(x);
+        m2.Add(y);
+        NetworkManagerV2.Instance.server.Send(m, (ushort)player);
+        NetworkManagerV2.Instance.server.Send(m2, (ushort)player.OppositePlayer());
     }
     #endregion
 

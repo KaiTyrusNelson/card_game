@@ -46,6 +46,21 @@ public class Player : MonoBehaviour
             }
         }
     }
+    // TODO: LOOK INTO CREATING AN ITERATOR FOR THIS, (IENUMERABLE)
+    public void RefreshAttacks()
+    {
+        for (int i =0; i < 2; i++)
+        {
+            for (int j=0; j < 3; j++)
+            {
+                if (PlayerBoard.GetAt(i,j)!=null){
+                if (PlayerBoard.GetAt(i, j).Hp <=0){
+                    //TODO: REFRESH ATTACKS
+                }
+                }
+            }
+        }
+    }
     #endregion
     /// <summary> This region is responsible for processing messages between the clients and the server regarding the player object <summary>
     #region Messages
@@ -116,10 +131,33 @@ public class Player : MonoBehaviour
         return true;
     }
 
+    public Tuple AttackCall(){
+        if (mostRecent != (ushort)ClientToServer.attack)
+        {
+            return null;
+        }
+        Debug.Log("Called Attack Message");
+        Tuple newTuple = new Tuple();
+        newTuple.x = board_x;
+        newTuple.y = board_y;
+        wipeInfo();
+        return newTuple;
+    }
+
 
 
     void wipeInfo(){
         mostRecent = 0;
+    }
+
+    // ATTACK WITH CARD
+    [MessageHandler((ushort)ClientToServer.attack)]
+    private static void attack(ushort fromClientId, Message message)
+    {
+        Debug.Log("RECEIVED ATTACK MESSAGE FROM CLIENT");
+        Manager.Players[(TurnPlayer)fromClientId].mostRecent = (ushort) ClientToServer.attack;
+        Manager.Players[(TurnPlayer)fromClientId].board_x = message.GetInt();
+        Manager.Players[(TurnPlayer)fromClientId].board_y = message.GetInt();
     }
 
     // SUMMON CARD FROM HAND
