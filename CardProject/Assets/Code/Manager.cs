@@ -68,6 +68,28 @@ public class Manager : MonoBehaviour
     {
         Destroy(evt.gameObject); 
     }
+
+    // OBJECT FOR KEEPING TRACK OF THE EFFECT CHAINS ORDER
+    [SerializeField] StartOfEffectEvent StartOfEffectObject;
+    public void AddEffectStartToEventStack()
+    {
+        StartOfEffectEvent pushObject = Instantiate(StartOfEffectObject, transform.position, transform.rotation);
+        StackPush(pushObject);
+    }
+
+    public void NegateEffect()
+    {
+        StackEvent t;
+        while(EventStack.TryPop(out t) == true)
+        {
+            if (t is StartOfEffectEvent)
+            {
+                Debug.Log("Found start of effect");
+                break;
+            }
+        }
+    }
+    
     #endregion
 
     public void Awake(){
@@ -111,33 +133,32 @@ public class Manager : MonoBehaviour
                 }
 
                 // CHECKS IF THEY WANT TO ATTACK
+                // TODO: MAKE THE ATTACK MESSAGE SCRIPT A BIT SMARTER
                 Tuple attackMessage = Players[currentPlayer].AttackCall();
                 // TRY THE ATTACK OUT
                 if (attackMessage !=null)
                 {
-                    TryAttackPosition(currentPlayer, attackMessage.x, attackMessage.y);
-                    if (ExistsChainable.Check(currentPlayer.OppositePlayer()))
+                    if (TryAttackPosition(currentPlayer, attackMessage.x, attackMessage.y))
                     {
-                        // MAKE FUNCTION FOR PUSHING EVENT STACK OBJECTS AND REMOVING, PARENT THEM, DELETE THEM ECT.
-                        ChainRequestObject pushObject = Instantiate(BasicPromptResponseObject, transform.position, transform.rotation);
-                        pushObject.Player = currentPlayer.OppositePlayer();
-                        StackPush(pushObject);
-                    }
+                    // MAKE FUNCTION FOR PUSHING EVENT STACK OBJECTS AND REMOVING, PARENT THEM, DELETE THEM ECT.
+                    ChainRequestObject pushObject = Instantiate(BasicPromptResponseObject, transform.position, transform.rotation);
+                    pushObject.Player = currentPlayer.OppositePlayer();
+                    StackPush(pushObject);
                     goto end;
+                    }
                 }
 
                 // TO DO, CHANGE SO AFTER ONE OF THESE NORMAL EVENTS ARE CALLED, IT WILL JUMP IMMEDIATLEY TO STACK RESOLUTION
-                if( Players[currentPlayer].SummonCall() == true)
+                summonArgs args = Players[currentPlayer].SummonCall();
+                if( args != null)
                 {
                     Debug.Log("summon call triggered");
+                    yield return Summon(currentPlayer, args.hand_location, args.x, args.y);
                     // If the other player is capable of chaining in the current moment, allow them;
-                    if (ExistsChainable.Check(currentPlayer.OppositePlayer()))
-                    {
-                        // MAKE FUNCTION FOR PUSHING EVENT STACK OBJECTS AND REMOVING, PARENT THEM, DELETE THEM ECT.
-                        ChainRequestObject pushObject = Instantiate(BasicPromptResponseObject, transform.position, transform.rotation);
-                        pushObject.Player = currentPlayer.OppositePlayer();
-                        StackPush(pushObject);
-                    }
+                    // MAKE FUNCTION FOR PUSHING EVENT STACK OBJECTS AND REMOVING, PARENT THEM, DELETE THEM ECT.
+                    ChainRequestObject pushObject = Instantiate(BasicPromptResponseObject, transform.position, transform.rotation);
+                    pushObject.Player = currentPlayer.OppositePlayer();
+                    StackPush(pushObject);
                     goto end;
                 }
 
@@ -169,7 +190,7 @@ public class Manager : MonoBehaviour
     }
 
     [SerializeField] AttackEvent attackEvent;
-    public void TryAttackPosition(TurnPlayer player, int x, int y)
+    public bool TryAttackPosition(TurnPlayer player, int x, int y)
     {
         // THIS NEEDS TO BE A CHAIN EVENT
         Character attacking = Players[player].PlayerBoard.GetAt(x,y);
@@ -177,13 +198,16 @@ public class Manager : MonoBehaviour
             AttackEvent evt = Instantiate(attackEvent,transform.position, transform.rotation);
             evt.AttackingCharacter = attacking;
             StackPush(evt);
+
+            return true;
             // TODO: SEND ATTACK MESSAGE
         }
+        return false;
     }
 
 
     // CHECKS IF A CARD IS SUMMONABLE FROM A CURRENT LOCATION
-    bool checkSummonable(TurnPlayer player, int hand_location, int x, int y)
+    public bool checkSummonable(TurnPlayer player, int hand_location, int x, int y)
     {   
         Debug.Log($"Calling Summon Player: {player} Location: {hand_location} x: {x} y: {y}");
         // LOCATION MUST EXIST
@@ -215,14 +239,15 @@ public class Manager : MonoBehaviour
         return true;
     }
 
-    public bool Summon(TurnPlayer player, int hand_location, int x, int y){
+    public IEnumerator Summon(TurnPlayer player, int hand_location, int x, int y){
+    
         if (!checkSummonable(player, hand_location, x, y))
         {
-            return false;
+            yield break;
         }
+        
         Players[player].CurrentMana -= Players[player].PlayerHand.GetCard(hand_location).ManaCost;
-        Players[player].PlayerHand.PlayCardFromPosition(hand_location, x, y);
-        return true;
+        yield return Players[player].PlayerHand.PlayCardFromPosition(hand_location, x, y);
     }
     
 

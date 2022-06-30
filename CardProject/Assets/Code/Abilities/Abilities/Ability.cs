@@ -25,14 +25,24 @@ public abstract class Ability : MonoBehaviour
     /// <summary> This is what happens when the ability is activated<summary>
     // TODO: ADD MULTICHAINING
     // TODO: ADD TWO PART EFFECTS / CONDITIONAL EFFECTS
-    public IEnumerator Activate(){
+    public IEnumerator Activate(bool seperateEffect = true)
+    {
+        // if it is a seperate effect
+        if (seperateEffect)
+            Manager.Singleton.AddEffectStartToEventStack();
+
         // INFORMS THE CLIENTS WHO IS PLAYING THEIR CARD
         ResponseMessages.SendActingPlayer(AssociatedCard.Player);
         // SUBTRACTS THE MANA COST
         Manager.Players[AssociatedCard.Player].CurrentMana-=manaCost;
         // ACTIVATES THE ABILITY
         yield return StartCoroutine(Active());
-        // INFORMS USERS OF THE RESOLVE EFFECT
+        // CHAINS THE FOLLOWING EFFECT
+        if (_followUp != null)
+        {
+            yield return StartCoroutine(_followUp.Activate(seperateEffect : false));
+        }
+        // INFORMS THE USER OF EFFECT RESOLVE
         Debug.Log("Effect has resolved");
     }  
 

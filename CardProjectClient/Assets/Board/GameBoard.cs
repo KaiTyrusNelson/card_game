@@ -45,6 +45,23 @@ public class GameBoard : MonoBehaviour
 
     [SerializeField]
     Transform[] row1Proxies; 
+
+    public void RemoveAt(int x, int y)
+    {
+        Card c;
+        x = x%2;
+        if (x==0)
+        {
+            c = row0[y]; 
+            row0[y] = null;   
+        }else{
+            c =row1[y]; 
+            row1[y] = null;
+        }
+        if (c!=null){
+            Destroy(c.gameObject);
+        }
+    }
   
     public void SetAt(Card c, int x, int y){
         x = x%2;
@@ -72,20 +89,43 @@ public class GameBoard : MonoBehaviour
         c.Location = Placement.board;
         int x_location = message.GetInt();
         int y_location = message.GetInt();
-        AllyBoard.SetAt(c, x_location, y_location);
+        Board boardSelection = (Board)message.GetUShort();
+        switch(boardSelection){
+            case(Board.allyBoard):
+            {
+                AllyBoard.SetAt(c, x_location, y_location);
+                break;
+            }
+            case(Board.enemyBoard):
+            {
+                OpponentBoard.SetAt(c, x_location, y_location);
+                break;
+            }
+        }
     }
-    [MessageHandler((ushort) ServerToClient.summonMessageOpponent)]
-    public static void SummonMessageOpponent(Message message)
+
+    [MessageHandler((ushort) ServerToClient.removeMessage)]
+    public static void RemovalMessage(Message message)
     {
         Card c = Instantiate(NonDraggable, Vector3.zero, Quaternion.identity);
-        c.Hp = message.GetUShort();
-        c.Attack = message.GetUShort();
-        c.Id = message.GetString();
-        c.Location = Placement.board;
         int x_location = message.GetInt();
         int y_location = message.GetInt();
-        OpponentBoard.SetAt(c, x_location, y_location);
+        Board boardSelection = (Board)message.GetUShort();
+        switch(boardSelection){
+            case(Board.allyBoard):
+            {
+                AllyBoard.RemoveAt(x_location, y_location);
+                break;
+            }
+            case(Board.enemyBoard):
+            {
+                OpponentBoard.RemoveAt(x_location, y_location);
+                break;
+            }
+        }
     }
+
+
     #endregion
 
 }

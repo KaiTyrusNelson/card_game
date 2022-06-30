@@ -17,6 +17,7 @@ public class Player : MonoBehaviour
     [SerializeField] public Hand PlayerHand;
     [SerializeField] public Graveyard PlayerGraveyard;
     [SerializeField] public Deck PlayerDeck;
+    [SerializeField] public BanishedZone Banished;
     [SerializeField] public int CurrentMana;
     [SerializeField] public int MaxMana;
 
@@ -69,36 +70,44 @@ public class Player : MonoBehaviour
     int hand_location;
     int board_x;
     int board_y;
-    int selection;
-    public int SelectionCall( int len ){
+    HashSet<ushort> receivedOptions;
+    public HashSet<ushort> SelectionCall( int len, int min, int max){
         // IF THE SELECTION CALL HASNT BEEN CALLED
         if (mostRecent != (ushort)ClientToServer.selectionCall){
-            return -1;
+            return null;
+        }
+        wipeInfo();
+        if (receivedOptions.Count < min || receivedOptions.Count > max){
+            Debug.Log("Inappropriate number of options selected");
+            return null;
         }
         Debug.Log("Called the selection call method.");
-
-        int sel = selection;
-        wipeInfo();
-        // IF SELECTION IS PAST THE END OF THE SELECTION RANGE
-        if (sel >= len || sel < 0)
+        foreach (ushort x in receivedOptions)
         {
-            Debug.Log("Invalid choice selected");
-            return -1;
+            // IF SELECTION IS PAST THE END OF THE SELECTION RANGE
+            if (x >= len || x < 0)
+            {
+                Debug.Log("Invalid choice selected");
+                return null;
+            }
         }
         // ELSE RETURN THE SELECTION
-        return sel;
+        wipeInfo();
+        return receivedOptions;
     }
 
-    public bool SummonCall(){
+    public summonArgs SummonCall(){
         if (mostRecent != (ushort)ClientToServer.summonMessage)
         {
-            return false;
+            return null;
         }
+        wipeInfo();
         Debug.Log("Called summon method");
         // THIS WILL MAKE SURE THE CALL THAT WAS PERFORMED WAS VALID OR NOT
-        bool done = Manager.Singleton.Summon(PlayerId, hand_location, board_x, board_y);
-        wipeInfo();
-        return done;
+        if (Manager.Singleton.checkSummonable(PlayerId, hand_location, board_x, board_y)){
+            return new summonArgs(hand_location, board_x, board_y);
+        }
+        return null;
     }
 
     public bool EndCall(){
@@ -144,10 +153,33 @@ public class Player : MonoBehaviour
         return newTuple;
     }
 
+    
+    public Tuple LocationSelectionCall(){
+        if (mostRecent != (ushort)ClientToServer.clientLocationSelectionMessage)
+        {
+            return null;
+        }
+        Debug.Log("Called location selection message");
+        Tuple newTuple = new Tuple();
+        newTuple.x = board_x;
+        newTuple.y = board_y;
+        wipeInfo();
+        return newTuple;
+    }
 
 
     void wipeInfo(){
         mostRecent = 0;
+    }
+
+    // ATTACK WITH CARD
+    [MessageHandler((ushort)ClientToServer.clientLocationSelectionMessage)]
+    private static void locationCall(ushort fromClientId, Message message)
+    {
+        Debug.Log("RECEIVED ATTACK MESSAGE FROM CLIENT");
+        Manager.Players[(TurnPlayer)fromClientId].mostRecent = (ushort) ClientToServer.clientLocationSelectionMessage;
+        Manager.Players[(TurnPlayer)fromClientId].board_x = message.GetInt();
+        Manager.Players[(TurnPlayer)fromClientId].board_y = message.GetInt();
     }
 
     // ATTACK WITH CARD
@@ -199,10 +231,30 @@ public class Player : MonoBehaviour
     private static void selectionCallMessage(ushort fromClientId, Message message)
     {
         Debug.Log("RECEIVED SELECTION CALL MESSAGE FROM CLIENT");
+        // GET THE SIZE FIRST
+        ushort total = message.GetUShort();
+        // GET THE OPTIONS AVALIABLE
+        HashSet<ushort> receivedOptions = new HashSet<ushort>();
+        for (int i =0; i < total; i++){
+            receivedOptions.Add(message.GetUShort());
+        }
+        // if this goes through
         Manager.Players[(TurnPlayer)fromClientId].mostRecent = (ushort) ClientToServer.selectionCall;
-        Manager.Players[(TurnPlayer)fromClientId].selection = message.GetInt();
+        Manager.Players[(TurnPlayer)fromClientId].receivedOptions = receivedOptions;
+        
     }
 
 
     #endregion
+}
+
+public class summonArgs{
+    public int hand_location;
+    public int x;
+    public int y;
+    public summonArgs(int i, int j, int k) { 
+        hand_location = i;
+        x = j;
+        y = k;
+    }
 }

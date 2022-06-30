@@ -1,4 +1,8 @@
 using UnityEngine;
+using System.Collections.Generic;
+using System.Collections;
+using System;
 public abstract class Effect : MonoBehaviour{
-    public abstract void Activation(Character c);
+    public Character AssociatedCard;
+    public abstract IEnumerator Activation(Character c);
 }

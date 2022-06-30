@@ -6,6 +6,7 @@ using RiptideNetworking;
 public class Hand : MonoBehaviour
 {
     [SerializeField] List<Character> cards;
+    public List<Character> Cards {get =>cards; private set{cards=value;}}
     [SerializeField] public int MaxSize;
     [SerializeField] public Player Owner; 
     [SerializeField] public TurnPlayer Player;
@@ -13,6 +14,18 @@ public class Hand : MonoBehaviour
     public int GetCount(){
         return cards.Count;
     }
+
+    public bool RemoveCard(Character c)
+    {
+        int location = cards.IndexOf(c);
+        if (location == -1)
+        {
+            return false;
+        }
+        RemoveCard(location);
+        return true;
+    }
+
     public Character GetCard(int loc){
         if (loc >= cards.Count || loc<0)
             return null;
@@ -31,6 +44,7 @@ public class Hand : MonoBehaviour
         // INFORMS THE CLIENTS ABOUT THE DRAWN CARDS--
         SendSelfDrawMessage(Player, c);
         SendOpponentDrawMessage(Player.OppositePlayer());
+        c.Location = CardLocations.Hand;
     }
 
     public void RemoveCard(int position)
@@ -40,11 +54,11 @@ public class Hand : MonoBehaviour
         SendSelfRemoveCardMessage(Player, position);
         SendOpponentRemoveCardMessage(Player.OppositePlayer(), position);
     }
-    public void PlayCardFromPosition(int position, int x, int y)
+    public IEnumerator PlayCardFromPosition(int position, int x, int y)
     {
         Character c = cards[position];
         RemoveCard(position);
-        Owner.PlayerBoard.SetAt(c,x,y);
+        yield return Owner.PlayerBoard.SetAt(c,x,y);
     }   
 
     #region Messages

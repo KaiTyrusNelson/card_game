@@ -2,11 +2,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using RiptideNetworking;
+
+
 public class ChainObject : StackEvent
 {
     // TO DO, PROMPT CONDITIONS
     [SerializeField] TurnPlayer _player;
     public TurnPlayer Player {
+        
         get => _player;
         set{
             _player = value;
@@ -14,40 +18,42 @@ public class ChainObject : StackEvent
     }
 
     // LIST OF CHAINABLE ABILITIES
-    [SerializeField] List<Ability> _abl;
-    public List<Ability> Abilities{get => _abl; set { _abl = value; }}
+    public SelectionList options;
 
     public override IEnumerator Activate()
     {
         ResponseMessages.SendActingPlayer(_player);
-        // FINDS ALL CHAINABLE EFFECTS
-        for (int i = 0; i < 2; i++)
-        {
-            for (int j =0; j<3; j++){
-                // TODO: THIS WILL NEED TO BE CHANGES AS MORE ABILITY TYPES ARE ADDED
-                Character checkCharacter = Manager.Players[_player].PlayerBoard.GetAt(i, j);
-                if (checkCharacter != null )
-                {
-                    foreach (Ability abl in checkCharacter.Abilities)
-                    {
-                        if (abl.CheckConditions())
-                            _abl.Add(abl);
-                    }
-                }
-            }
-        }  
         // final check to make sure there is an effect to be chosen
-        if (_abl.Count > 0)
+        if (options.Count() > 0)
         {
-
-        int select;
+        HashSet<ushort> select;
         Debug.Log($"Asking Player how they would like to respond to the following");
+        // SENDS THE REQUEST MESSAGE
+        options.SendMesssage(1,1);
         while(true){
             yield return null;
-            select = Manager.Players[_player].SelectionCall(_abl.Count);
-            if (select != -1)
+            select = Manager.Players[_player].SelectionCall(options.Count(), 1, 1);
+            if (select != null)
             {
-                yield return StartCoroutine(_abl[select].Activate());
+                foreach (ushort x in select)
+                {
+                    // DETERMINES WHICH ABILITY TO CHAIN DEPENDING ON THE SELECTION
+                    switch(options.iterationList[x].c.Location)
+                    {
+                        case(CardLocations.Board):
+                        {
+                            yield return StartCoroutine(options.iterationList[x].c.BoardAbility.Activate());
+                            break;
+                        }
+                        case(CardLocations.Hand):
+                        {
+                            yield return StartCoroutine(options.iterationList[x].c.HandAbility.Activate());
+                            break;
+                        }
+                    }
+                    
+                    break;
+                }
                 break;
             }
         }

@@ -169,6 +169,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player1: {fileID: 1233239851}
   player2: {fileID: 2034070050}
+  StartOfEffectObject: {fileID: 251390637822235847, guid: a4c20fff8ad42f34599431b2634de003, type: 3}
   BasicPromptResponseObject: {fileID: 3146940889356098634, guid: d7ffa78503720a64980b0a57cf924a4f, type: 3}
   attackEvent: {fileID: -3448268655657970089, guid: bda53cca1421ddf4face51a9510cb856, type: 3}
   playerOneManaField: {fileID: 502694237}
@@ -235,6 +236,52 @@ Transform:
   m_Father: {fileID: 2034070051}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &226085904
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 226085905}
+  - component: {fileID: 226085906}
+  m_Layer: 0
+  m_Name: PlayerOneBanished
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &226085905
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 226085904}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 4, y: -0.85, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1233239852}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &226085906
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 226085904}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d69c85d54b68ba64080b125755f9d82a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cards: []
+  Owner: {fileID: 1233239851}
 --- !u!1 &238301925
 GameObject:
   m_ObjectHideFlags: 0
@@ -1491,7 +1538,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e4e05d997ee42040942c840e8d164c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _cards: []
+  cards: []
   Owner: {fileID: 1233239851}
 --- !u!4 &1068467867
 Transform:
@@ -1626,6 +1673,7 @@ MonoBehaviour:
   PlayerHand: {fileID: 269415494}
   PlayerGraveyard: {fileID: 1068467866}
   PlayerDeck: {fileID: 540054572}
+  Banished: {fileID: 226085906}
   CurrentMana: 0
   MaxMana: 0
 --- !u!4 &1233239852
@@ -1644,9 +1692,56 @@ Transform:
   - {fileID: 819906112}
   - {fileID: 269415495}
   - {fileID: 540054571}
+  - {fileID: 226085905}
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1246285078
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1246285079}
+  - component: {fileID: 1246285080}
+  m_Layer: 0
+  m_Name: PlayerTwoBanished
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1246285079
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1246285078}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 4, y: 1.05, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2034070051}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1246285080
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1246285078}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d69c85d54b68ba64080b125755f9d82a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cards: []
+  Owner: {fileID: 2034070050}
 --- !u!1 &1306079649
 GameObject:
   m_ObjectHideFlags: 0
@@ -1844,7 +1939,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e4e05d997ee42040942c840e8d164c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _cards: []
+  cards: []
   Owner: {fileID: 2034070050}
 --- !u!4 &1785708393
 Transform:
@@ -2063,6 +2158,7 @@ MonoBehaviour:
   PlayerHand: {fileID: 819227351}
   PlayerGraveyard: {fileID: 1785708392}
   PlayerDeck: {fileID: 295345212}
+  Banished: {fileID: 1246285080}
   CurrentMana: 0
   MaxMana: 0
 --- !u!4 &2034070051
@@ -2081,6 +2177,7 @@ Transform:
   - {fileID: 819227352}
   - {fileID: 295345213}
   - {fileID: 1785708393}
+  - {fileID: 1246285079}
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

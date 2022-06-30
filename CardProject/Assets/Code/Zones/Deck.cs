@@ -6,7 +6,7 @@ using UnityEngine;
 public class Deck : MonoBehaviour
 {
     [SerializeField] List<Character> cards;
-    public List<Character> Cards {get =>cards; set{cards=value;}}
+    public List<Character> Cards {get =>cards; private set{cards=value;}}
     [SerializeField] public Player Owner; 
     [SerializeField] TurnPlayer _player;
 
@@ -21,6 +21,10 @@ public class Deck : MonoBehaviour
         }
     }
 
+    public bool RemoveCard(Character c)
+    {
+        return cards.Remove(c);
+    }
     public void Shuffle()
     {
         cards.Shuffle();

@@ -444,16 +444,69 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9aadec21bc41bb9408a1913e0dbb6e59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _boardAbility: {fileID: 2412951445802587106}
+  summonAbility: {fileID: 0}
+  optionalSummonAbility: 0
+  HandAbility: {fileID: 0}
   _id: AAAA0000
   _maxHp: 5
   _hp: 5
   _attack: 3
   _player: 0
   _manaCost: 2
+  element: 0
+  attributes: 
+  HasAttacked: 0
+  Location: 1
   attackTextBox: {fileID: 3042492365398784855}
   defenseTextBox: {fileID: 3042492364987581407}
-  _abilities:
-  - {fileID: 2412951445802587106}
+--- !u!1 &4189832900783795202
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 480068048358730547}
+  - component: {fileID: 8295679015323375811}
+  m_Layer: 0
+  m_Name: DamageEvent
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &480068048358730547
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4189832900783795202}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7900204469978766764}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8295679015323375811
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4189832900783795202}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28e54090a844df04bb6ad7252d459df2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  AssociatedPlayer: 0
+  Char: {fileID: 0}
+  _damage: 4
 --- !u!1001 &1630426617629913421
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -464,6 +517,18 @@ PrefabInstance:
     - target: {fileID: -5198008492728245585, guid: 9bf3c575226295b4884ff28bfc578688, type: 3}
       propertyPath: manaCost
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: -5198008492728245585, guid: 9bf3c575226295b4884ff28bfc578688, type: 3}
+      propertyPath: enemyBoard
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -5198008492728245585, guid: 9bf3c575226295b4884ff28bfc578688, type: 3}
+      propertyPath: maxSelections
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: -5198008492728245585, guid: 9bf3c575226295b4884ff28bfc578688, type: 3}
+      propertyPath: minSelections
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -5198008492728245585, guid: 9bf3c575226295b4884ff28bfc578688, type: 3}
       propertyPath: _associatedCard
@@ -477,6 +542,14 @@ PrefabInstance:
       propertyPath: _efct.Array.data[0]
       value: 
       objectReference: {fileID: 7563827823917052632}
+    - target: {fileID: -5198008492728245585, guid: 9bf3c575226295b4884ff28bfc578688, type: 3}
+      propertyPath: _conditions.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -5198008492728245585, guid: 9bf3c575226295b4884ff28bfc578688, type: 3}
+      propertyPath: _conditions.Array.data[0]
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 2556836494923236488, guid: 9bf3c575226295b4884ff28bfc578688, type: 3}
       propertyPath: m_RootOrder
       value: 2
@@ -523,7 +596,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4675018623204740556, guid: 9bf3c575226295b4884ff28bfc578688, type: 3}
       propertyPath: m_Name
-      value: TargetSingle
+      value: TargetDamage
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9bf3c575226295b4884ff28bfc578688, type: 3}
@@ -551,9 +624,17 @@ PrefabInstance:
     m_TransformParent: {fileID: 3880912520093611461}
     m_Modifications:
     - target: {fileID: -5814652295438857503, guid: 3eadccb70b1cc394ca6c3fcbf631ecd0, type: 3}
+      propertyPath: _evt
+      value: 
+      objectReference: {fileID: 8295679015323375811}
+    - target: {fileID: -5814652295438857503, guid: 3eadccb70b1cc394ca6c3fcbf631ecd0, type: 3}
       propertyPath: _damage
-      value: 4
+      value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: -5814652295438857503, guid: 3eadccb70b1cc394ca6c3fcbf631ecd0, type: 3}
+      propertyPath: AssociatedCard
+      value: 
+      objectReference: {fileID: 3042492365951957778}
     - target: {fileID: 3032334066217526677, guid: 3eadccb70b1cc394ca6c3fcbf631ecd0, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -615,3 +696,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d78a944a0ebdad42b6977e1f4e68792, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!4 &7900204469978766764 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3032334066217526677, guid: 3eadccb70b1cc394ca6c3fcbf631ecd0, type: 3}
+  m_PrefabInstance: {fileID: 5167363663819946041}
+  m_PrefabAsset: {fileID: 0}

@@ -16,13 +16,15 @@ public enum ClientToServer{
     // MESSAGE FOR WHEN A CLIENT MAKES A SELECTION FROM A LIST
     selectionCall,
     // ATTACK MESSAGE
-    attack
+    attack,
+    // SELECTS A LOCATION
+    clientLocationSelectionMessage
 };
+
 
 public enum ServerToClient{
     // MESSAGE FOR WHEN A CARD IS SUMMONED ONTO THE BOARD
     summonMessage = 1,
-    summonMessageOpponent,
     // MESSAGE WHEN YOUR OPPONENT DRAWS A CARD TODO
     opponentDrawCard,
     // MESSAGE WHEN YOU DRAW A CARD TODO
@@ -39,6 +41,10 @@ public enum ServerToClient{
     selectionRequest,
     // MESSAGE CONFIRMING PLAYER IDENTITY
     playerIdentityPacket,
+    // Message remove card from board
+    removeMessage,
+    // LOCATION SELECTION REQUEST
+    locationSelectionRequest,
 }
 
 public class NetworkManagerV2 : MonoBehaviour
