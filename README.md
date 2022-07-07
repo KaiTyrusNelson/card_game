@@ -113,5 +113,32 @@ There are times which we will not want to use the animation queue, but those wil
         yield break;
     }
 ```
-## Server
+## A note on messages
+Messages are received as bytes and must be sent and read is a specific order. To know what order they must be read and such, it is usually best to just use the find command in the server code. Messages are sent with pretty straightforward structures.
+
+## Current Functionalities
+
+play cards
+
+have a mana system
+
+cards are capable of having effects which are modular and easy to build upon
+
+effects can be chained together, forming a stack, where the last played effect takes first precedence
+
+cards can attack
+
+cards can "switch locations" in a response to attack
+
+## Planned functionalities
+
+Dynamic client animation
+
+Player Hp's and game end are not coded in yet
+
+More kinds of effects, such as effects activating from graveyard / banished zones
+
+I plan to add an "Extra Deck", this concept exists in other card games, and has a super cool functionality
+
+# Server
 The server is a great deal more complex and will be updated later.
