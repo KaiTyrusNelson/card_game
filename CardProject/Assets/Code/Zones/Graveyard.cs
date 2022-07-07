@@ -3,24 +3,14 @@ using System.Collections.Generic;
 
 
 /// <summary> The graveyard is the zone in which the cards go when they die<summary>
-public class Graveyard: MonoBehaviour{
+public class Graveyard: CardContainer{
     [SerializeField] List<Character> cards;
-    public List<Character> Cards {get=>cards; set{cards=value;}}
     [SerializeField] public Player Owner; 
+    public void Awake()
+    {
+        location = CardLocations.Graveyard;
+    }
 
-    public void AddCard(Character c)
-    {
-        cards.Add(c);
-        c.transform.SetParent(this.transform);
-        // if the card is dead it should be set back to max hp
-        c.Hp = c.MaxHp;
-        c.Location = CardLocations.Graveyard;
-    }
-    
-    public bool RemoveCard(Character c)
-    {
-        return cards.Remove(c);
-    }
     #region DisplayFunctions
     public void Update()
     {

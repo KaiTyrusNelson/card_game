@@ -14,6 +14,15 @@ public class ChainMessageIndicatorParent : MonoBehaviour
     [MessageHandler((ushort) ServerToClient.chainRequest)]
     public static void chainRequest(Message message)
     {
+        AnimationManager.Singleton.ADD_ANIMATION(HandleChainRequest());
+    }
+
+    public static IEnumerator HandleChainRequest(){
         IndicatorPanel.SetActive(true);
+
+        while (IndicatorPanel.activeInHierarchy){
+            yield return null;
+        }
+        yield break;
     }
 }

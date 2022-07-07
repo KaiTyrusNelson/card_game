@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-
+using RiptideNetworking;
 public enum TurnPlayer{
     Player1 = 1,
     Player2
@@ -48,6 +48,14 @@ public class Manager : MonoBehaviour
         Players[player].MaxMana += 2;
         Players[player].CurrentMana = Players[player].MaxMana;
         Players[player].DrawCard();
+
+        foreach (Character c in Players[player].PlayerBoard.ToArray())
+        {
+            if (c!=null)
+            {
+                c.Reset();
+            }
+        }
     }
     #endregion
     ///<summary> This contains information on the event stack<summary>
@@ -71,9 +79,10 @@ public class Manager : MonoBehaviour
 
     // OBJECT FOR KEEPING TRACK OF THE EFFECT CHAINS ORDER
     [SerializeField] StartOfEffectEvent StartOfEffectObject;
-    public void AddEffectStartToEventStack()
+    public void AddEffectStartToEventStack(string id)
     {
         StartOfEffectEvent pushObject = Instantiate(StartOfEffectObject, transform.position, transform.rotation);
+        pushObject.Id = id;
         StackPush(pushObject);
     }
 
@@ -85,11 +94,34 @@ public class Manager : MonoBehaviour
             if (t is StartOfEffectEvent)
             {
                 Debug.Log("Found start of effect");
+                Destroy(t.gameObject);
                 break;
             }
+            Destroy(t.gameObject);
         }
     }
     
+    public static void SendStackEventState(){
+        // tally up the total events in the event stack
+        Debug.Log("Sending stack event state");
+        List<string> ids = new List<string>();
+
+        foreach (StackEvent evt in Singleton.EventStack)
+        {
+            if (evt is StartOfEffectEvent){
+                ids.Add(((StartOfEffectEvent)evt).Id);
+            }
+        }
+        // SENDS THE MESSAGE
+        Message m = Message.Create(MessageSendMode.reliable, (ushort)ServerToClient.chainBuildMessage);
+        m.Add(ids.Count);
+        foreach (string str in ids)
+        {
+            m.Add(str);
+        }
+        // SENDS THE MESSAGE TO ALL AVALIABLE CLIENTS
+        NetworkManagerV2.Instance.server.SendToAll(m);
+    }
     #endregion
 
     public void Awake(){
@@ -122,6 +154,9 @@ public class Manager : MonoBehaviour
 
         while(true){
             BeginTurn(currentPlayer);
+            GameBoard.sendCurrentBoardStateMessage(Players[currentPlayer].PlayerBoard, currentPlayer);
+            GameBoard.sendCurrentBoardStateMessage(Players[currentPlayer.OppositePlayer()].PlayerBoard, currentPlayer.OppositePlayer());
+
             while(true){
                 ///<summary> THE FIRST THING WE DO IS BEGIN TO POP OPEN THE STACK<summary>
                 ///<summary> NORMAL ACTIONS (SUMMONING AND ENDING TURNS)<summary>
@@ -138,6 +173,7 @@ public class Manager : MonoBehaviour
                 // TRY THE ATTACK OUT
                 if (attackMessage !=null)
                 {
+                    // IF THE ATTACK CAN GO THOUGH
                     if (TryAttackPosition(currentPlayer, attackMessage.x, attackMessage.y))
                     {
                     // MAKE FUNCTION FOR PUSHING EVENT STACK OBJECTS AND REMOVING, PARENT THEM, DELETE THEM ECT.
@@ -153,13 +189,32 @@ public class Manager : MonoBehaviour
                 if( args != null)
                 {
                     Debug.Log("summon call triggered");
-                    yield return Summon(currentPlayer, args.hand_location, args.x, args.y);
-                    // If the other player is capable of chaining in the current moment, allow them;
-                    // MAKE FUNCTION FOR PUSHING EVENT STACK OBJECTS AND REMOVING, PARENT THEM, DELETE THEM ECT.
-                    ChainRequestObject pushObject = Instantiate(BasicPromptResponseObject, transform.position, transform.rotation);
-                    pushObject.Player = currentPlayer.OppositePlayer();
-                    StackPush(pushObject);
-                    goto end;
+                    if (checkSummonable(currentPlayer, args.hand_location, args.x, args.y)){
+                        yield return Summon(currentPlayer, args.hand_location, args.x, args.y);
+                        // If the other player is capable of chaining in the current moment, allow them;
+                        // MAKE FUNCTION FOR PUSHING EVENT STACK OBJECTS AND REMOVING, PARENT THEM, DELETE THEM ECT.
+                        ChainRequestObject pushObject = Instantiate(BasicPromptResponseObject, transform.position, transform.rotation);
+                        pushObject.Player = currentPlayer.OppositePlayer();
+                        StackPush(pushObject);
+                        goto end;
+                    }
+                }
+
+                Tuple abilityBoardArgs = Players[currentPlayer].CastAbilityFromBoardCall();
+                if (abilityBoardArgs != null)
+                {
+                    Character c = Players[currentPlayer].PlayerBoard.GetAt(abilityBoardArgs.x, abilityBoardArgs.y);
+                    // IF THE CONDITIONS ARE MET
+                    if (c != null)
+                    {
+                        if (c.BoardAbility != null)
+                        {
+                            if (c.BoardAbility.CheckConditions())
+                            {
+                                yield return StartCoroutine(c.BoardAbility.Activate());
+                            }
+                        }
+                    }
                 }
 
                 end:
@@ -186,6 +241,8 @@ public class Manager : MonoBehaviour
             // CLEAN UP THE BOARD
             Players[currentPlayer].CleanUpBoard();
             Players[currentPlayer.OppositePlayer()].CleanUpBoard();
+            GameBoard.sendCurrentBoardStateMessage(Players[currentPlayer].PlayerBoard, currentPlayer);
+            GameBoard.sendCurrentBoardStateMessage(Players[currentPlayer.OppositePlayer()].PlayerBoard, currentPlayer.OppositePlayer());
         }
     }
 
@@ -194,18 +251,40 @@ public class Manager : MonoBehaviour
     {
         // THIS NEEDS TO BE A CHAIN EVENT
         Character attacking = Players[player].PlayerBoard.GetAt(x,y);
+        // IF THE ATTACKING CHARACTER EXISTS
         if (attacking!=null){
-            AttackEvent evt = Instantiate(attackEvent,transform.position, transform.rotation);
-            evt.AttackingCharacter = attacking;
-            StackPush(evt);
+            // AND THE ATTACKING CHARACTER HAS ATTACKED
+            if (!attacking.HasAttacked){
+                AttackEvent evt = Instantiate(attackEvent,transform.position, transform.rotation);
+                evt.AttackingCharacter = attacking;
+                StackPush(evt);
+                SendAttackMessage(player, x, y);
+                attacking.HasAttacked = true;
 
-            return true;
-            // TODO: SEND ATTACK MESSAGE
+                return true;
+            }
         }
         return false;
     }
 
-
+    public void SendAttackMessage(TurnPlayer player, int x, int y)
+    {
+        // CREATES A MESSAGE TO SEND TO THE PLAYERS
+        Message m = Message.Create(MessageSendMode.reliable, (ushort)ServerToClient.attackDeclareEvent);
+        Message m2 = Message.Create(MessageSendMode.reliable, (ushort)ServerToClient.attackDeclareEvent);
+        // POPULATES THE MESSAGES
+        m.Add(x);
+        m.Add(y);
+        m2.Add(x);
+        m2.Add(y);
+        // TELLS THE PLAYERS WHICH BOARD IT CORESPONDS TO
+        m.Add((ushort)Board.allyBoard);
+        m2.Add((ushort)Board.enemyBoard);
+        // SENDS THE MESSAGES
+        NetworkManagerV2.Instance.server.Send(m, (ushort)player);
+        NetworkManagerV2.Instance.server.Send(m2, (ushort)player.OppositePlayer());
+    }
+    
     // CHECKS IF A CARD IS SUMMONABLE FROM A CURRENT LOCATION
     public bool checkSummonable(TurnPlayer player, int hand_location, int x, int y)
     {   
@@ -225,11 +304,6 @@ public class Manager : MonoBehaviour
             Debug.Log("Location is occupied.");
             return false;
         }
-        // SUMMONING CANNOT BE DONE VIA CHAIN
-        if(EventStack.Count != 0){
-            Debug.Log("Cannot perform a summon during a chain.");
-            return false;
-        }
         // Player MUST HAVE ENOUGH MANA
         if (Players[player].CurrentMana < Players[player].PlayerHand.GetCard(hand_location).ManaCost)
         {
@@ -239,13 +313,7 @@ public class Manager : MonoBehaviour
         return true;
     }
 
-    public IEnumerator Summon(TurnPlayer player, int hand_location, int x, int y){
-    
-        if (!checkSummonable(player, hand_location, x, y))
-        {
-            yield break;
-        }
-        
+    public IEnumerator Summon(TurnPlayer player, int hand_location, int x, int y){    
         Players[player].CurrentMana -= Players[player].PlayerHand.GetCard(hand_location).ManaCost;
         yield return Players[player].PlayerHand.PlayCardFromPosition(hand_location, x, y);
     }
@@ -254,6 +322,7 @@ public class Manager : MonoBehaviour
 
     #region DebugTools
     // EXISTS SOLELY FOR VISUALIZATION DURING DEBUGGING
+
 
     [SerializeField]
     TMP_Text playerOneManaField;

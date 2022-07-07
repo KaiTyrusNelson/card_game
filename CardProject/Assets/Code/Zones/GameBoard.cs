@@ -111,6 +111,54 @@ public class GameBoard : MonoBehaviour
             RemoveAt(x, y);
         }
     }
+
+
+    public bool CheckSwapable(int x, int y, int x2, int y2){
+        
+        if (x >= 2 || x2 >= 2 || x < 0 || x2 < 0)
+        {
+            return false;
+        }
+        if (y >= 3 || y >= 3 || y < 0 || y2 < 0)
+        {
+            return false;
+        }
+        // IF THE FIRST CHARACTER EXISTS
+        if (GetAt(x,y) == null){
+            return false;
+        }
+        // AND HASNT SWAPPED
+        if (GetAt(x,y).HasSwitched == true){
+            return false;
+        }
+        // AND THE SECOND CHARACTER DOESNT EXIST / HASNOT SWAPPED
+        if (GetAt(x2, y2) != null){
+            if (GetAt(x2,y2).HasSwitched == true)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public IEnumerator SwapPositions(int x, int y, int x2, int y2)
+    {
+        Character temp = GetAt(x,y);
+        Character temp2 = GetAt(x2,y2);
+        RemoveAt(x,y);
+        RemoveAt(x2,y2);
+        if (temp2 != null)
+        {
+            yield return StartCoroutine(SetAt(temp2, x, y, isSummon : false));
+            temp2.HasSwitched = true;
+        }
+        if (temp != null)
+        {
+            yield return StartCoroutine(SetAt(temp, x2, y2, isSummon : false));
+            temp.HasSwitched = true;
+        }
+        yield break;
+    }
     
     #region Messages
     /// <summary> Designed to communicate when a card has been summoned <summary>
@@ -131,6 +179,7 @@ public class GameBoard : MonoBehaviour
         m2.Add((ushort)Board.enemyBoard);
         NetworkManagerV2.Instance.server.Send(m, (ushort)player);
         NetworkManagerV2.Instance.server.Send(m2, (ushort)player.OppositePlayer());
+        sendCurrentBoardStateMessage(Manager.Players[player].PlayerBoard, player);
     }
 
     public static void sendRemoveMessage(int x, int y, TurnPlayer player){
@@ -142,6 +191,46 @@ public class GameBoard : MonoBehaviour
         m2.Add(x);
         m2.Add(y);
         m2.Add((ushort)Board.enemyBoard);
+        NetworkManagerV2.Instance.server.Send(m, (ushort)player);
+        NetworkManagerV2.Instance.server.Send(m2, (ushort)player.OppositePlayer());
+        sendCurrentBoardStateMessage(Manager.Players[player].PlayerBoard, player);
+    }
+
+    public static void sendCurrentBoardStateMessage(GameBoard b, TurnPlayer player)
+    {
+        Message m2 = Message.Create(MessageSendMode.reliable, (ushort)ServerToClient.boardUpdateEnemy);
+        Message m = Message.Create(MessageSendMode.reliable, (ushort)ServerToClient.boardUpdate);
+
+        // FOR EVERY CHARACTER
+        foreach (Character c in b.ToArray())
+        {
+            if (c == null){
+                m.Add(false);
+                m2.Add(false);
+            }else{
+                m.Add(true);
+                m2.Add(true);
+                m.Add(c.Id);
+                m2.Add(c.Id);
+                m.Add(c.Attack);
+                m2.Add(c.Attack);
+                m.Add(c.Hp);
+                m2.Add(c.Hp);
+
+                // IF THE BOARD ABILITY HAS VIABLE CONDITIONS CHOSEN
+                if (c.BoardAbility != null)
+                {
+                    if (c.BoardAbility.CheckConditions())
+                    {
+                        m.Add(true);
+                    }else{
+                        m.Add(false);
+                    }
+                }else{
+                    m.Add(false);
+                }
+            }
+        }
         NetworkManagerV2.Instance.server.Send(m, (ushort)player);
         NetworkManagerV2.Instance.server.Send(m2, (ushort)player.OppositePlayer());
     }

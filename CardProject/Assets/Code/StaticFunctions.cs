@@ -40,8 +40,9 @@ public static class ResponseMessages
     {
         currentActingPlayer = id;
         Message m = Message.Create(MessageSendMode.reliable, (ushort)ServerToClient.sendActingPlayer);
-        m.Add((ushort)id);
-        NetworkManagerV2.Instance.server.SendToAll(m);
+        Message m2 = Message.Create(MessageSendMode.reliable, (ushort)ServerToClient.sendWaitingPlayer);
+        NetworkManagerV2.Instance.server.Send(m, (ushort)id);
+        NetworkManagerV2.Instance.server.Send(m2, (ushort)id.OppositePlayer());
         Debug.Log($"ACTING PLAYER {id}");
     }
 }

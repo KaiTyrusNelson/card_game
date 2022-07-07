@@ -5,8 +5,8 @@ using RiptideNetworking;
 
 public class Hand : MonoBehaviour
 {
-    [SerializeField] Card card;
-    public List<Card> cardsInHand;
+    [SerializeField] HandCard card;
+    public List<HandCard> cardsInHand;
 
     public static Hand Singleton;
     public void Awake(){
@@ -15,7 +15,7 @@ public class Hand : MonoBehaviour
     public void HandleDrawCard(string id, ushort hp, ushort attack, ushort manaCost)
     {
         // READS ALL OF THE CARD DATA AND POPULATES THE NEW OBJECT
-        Card newCard = Instantiate(card);
+        HandCard newCard = Instantiate(card);
         newCard.Id = id;
         newCard.Hp = hp;
         newCard.Attack = attack;

@@ -12,6 +12,8 @@ public class SelectionMessage : MonoBehaviour
     [SerializeField] SelectionCard CardObject;
     // THE OBJECT WHICH WE PLACE THESE ON
     [SerializeField] GameObject Target;
+
+    public static bool selectionDone = false;
     
     List<SelectionCard> Cards = new List<SelectionCard>();
 
@@ -48,9 +50,6 @@ public class SelectionMessage : MonoBehaviour
             Debug.Log($"Count {SelectionBuffer.Count} min {minSelections} max {maxSelections}");
             return;
         }
-
-
-        SelectionPanel.SetActive(false);
         Message m = Message.Create(MessageSendMode.reliable, (ushort)ClientToServer.selectionCall);
         m.Add((ushort)SelectionBuffer.Count);
         foreach (ushort x in SelectionBuffer)
@@ -63,6 +62,24 @@ public class SelectionMessage : MonoBehaviour
 
     [MessageHandler((ushort) ServerToClient.selectionRequest)]
     public static void selectionRequest(Message message)
+    {
+        Message m = System.ObjectExtensions.Copy(message);
+        AnimationManager.Singleton.ADD_ANIMATION(HandleSelectionRequest(m));
+    }
+
+    [MessageHandler((ushort) ServerToClient.confirmSelectionEnd)]
+    public static void selectionEnd(Message message)
+    {
+        Debug.Log("SelectionEndMessage has been received");
+        selectionDone = true;
+         AnimationManager.Singleton.ADD_ANIMATION(NextSelectionRequestPrep());
+    }
+    public static IEnumerator NextSelectionRequestPrep()
+    {
+        selectionDone = false;
+        yield break;
+    }
+    public static IEnumerator HandleSelectionRequest(Message message)
     {
         Singleton.SelectionPanel.SetActive(true);
         Singleton.Clear();
@@ -77,6 +94,14 @@ public class SelectionMessage : MonoBehaviour
             string id = message.GetString();
             Singleton.AddCard(id, i);
         }
+
+        // HOLDS THIS UNTIL THE SELECTION HAS BEEN MADE
+        while (!selectionDone)
+        {
+            yield return null;
+        }
+        Singleton.SelectionPanel.SetActive(false);
+        yield break;
     }
     
 

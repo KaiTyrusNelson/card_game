@@ -14,8 +14,8 @@ public class CardRenderer : MonoBehaviour
     {
         // GETS THE ID AND THEN THE SPRITE
         if (card.Id != null && card.Id != ""){
-        sprite = Resources.Load <Sprite>($"CardImages/{card.Id}");
-        target.sprite = sprite;
+            sprite = Resources.Load <Sprite>($"CardImages/{card.Id}");
+            target.sprite = sprite;
         }
     }
 

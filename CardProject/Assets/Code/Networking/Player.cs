@@ -70,6 +70,9 @@ public class Player : MonoBehaviour
     int hand_location;
     int board_x;
     int board_y;
+
+    int x_2;
+    int y_2;
     HashSet<ushort> receivedOptions;
     public HashSet<ushort> SelectionCall( int len, int min, int max){
         // IF THE SELECTION CALL HASNT BEEN CALLED
@@ -167,6 +170,31 @@ public class Player : MonoBehaviour
         return newTuple;
     }
 
+    public Tuple CastAbilityFromBoardCall(){
+        if (mostRecent != (ushort)ClientToServer.castAbilityFromBoard)
+        {
+            return null;
+        }
+        Debug.Log("Called location selection message");
+        Tuple newTuple = new Tuple();
+        newTuple.x = board_x;
+        newTuple.y = board_y;
+        wipeInfo();
+        return newTuple;
+    }
+
+    public int[] SwapMessageCall()
+    {
+        if (mostRecent != (ushort)ClientToServer.swapMessage)
+        {
+            return null;
+        }
+        Debug.Log("Called swap message");
+        int[] returnObj = new int[4] {board_x, board_y, x_2, y_2};
+        return returnObj;
+    }
+
+
 
     void wipeInfo(){
         mostRecent = 0;
@@ -176,8 +204,17 @@ public class Player : MonoBehaviour
     [MessageHandler((ushort)ClientToServer.clientLocationSelectionMessage)]
     private static void locationCall(ushort fromClientId, Message message)
     {
-        Debug.Log("RECEIVED ATTACK MESSAGE FROM CLIENT");
+        Debug.Log("RECEIVED LOCATION MESSAGE FROM CLIENT");
         Manager.Players[(TurnPlayer)fromClientId].mostRecent = (ushort) ClientToServer.clientLocationSelectionMessage;
+        Manager.Players[(TurnPlayer)fromClientId].board_x = message.GetInt();
+        Manager.Players[(TurnPlayer)fromClientId].board_y = message.GetInt();
+    }
+
+    [MessageHandler((ushort)ClientToServer.castAbilityFromBoard)]
+    private static void castAbilityFromBoard(ushort fromClientId, Message message)
+    {
+        Debug.Log("RECEIVED ABILITY CAST MESSAGE FROM CLIENT");
+        Manager.Players[(TurnPlayer)fromClientId].mostRecent = (ushort) ClientToServer.castAbilityFromBoard;
         Manager.Players[(TurnPlayer)fromClientId].board_x = message.GetInt();
         Manager.Players[(TurnPlayer)fromClientId].board_y = message.GetInt();
     }
@@ -226,7 +263,6 @@ public class Player : MonoBehaviour
         Debug.Log("RECEIVED CHAIN MESSAGE FROM CLIENT");
         Manager.Players[(TurnPlayer)fromClientId].mostRecent = (ushort) ClientToServer.chain;
     }
-
     [MessageHandler((ushort)ClientToServer.selectionCall)]
     private static void selectionCallMessage(ushort fromClientId, Message message)
     {
@@ -242,6 +278,19 @@ public class Player : MonoBehaviour
         Manager.Players[(TurnPlayer)fromClientId].mostRecent = (ushort) ClientToServer.selectionCall;
         Manager.Players[(TurnPlayer)fromClientId].receivedOptions = receivedOptions;
         
+    }
+
+    [MessageHandler((ushort)ClientToServer.swapMessage)]
+    private static void swapMessage(ushort fromClientId, Message message)
+    {
+        Debug.Log("RECEIVED SWAP MESSAGE FROM CLIENT");
+        // GET ALL THE DATA
+        Manager.Players[(TurnPlayer)fromClientId].board_x = message.GetInt();
+        Manager.Players[(TurnPlayer)fromClientId].board_y = message.GetInt();
+        Manager.Players[(TurnPlayer)fromClientId].x_2 = message.GetInt();
+        Manager.Players[(TurnPlayer)fromClientId].y_2 = message.GetInt();
+        // if this goes through
+        Manager.Players[(TurnPlayer)fromClientId].mostRecent = (ushort) ClientToServer.swapMessage;
     }
 
 

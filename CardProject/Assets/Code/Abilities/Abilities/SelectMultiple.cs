@@ -23,6 +23,9 @@ public class SelectMultiple : Ability
 
     [SerializeField]bool enemyGraveyard;
     [SerializeField]bool allyGraveyard;
+
+    [SerializeField] bool enemyDeck;
+    [SerializeField] bool allyDeck;
     #endregion
 
     SelectionList Selections = new SelectionList();
@@ -47,6 +50,12 @@ public class SelectMultiple : Ability
         if (enemyGraveyard){
             Selections.AddGraveyard(AssociatedCard.Player.OppositePlayer());
         }
+        if (allyDeck){
+            Selections.AddDeck(AssociatedCard.Player);
+        }
+        if (enemyDeck){
+            Selections.AddDeck(AssociatedCard.Player.OppositePlayer());
+        }
     }
 
     public override bool CheckSelfCondition(){
@@ -64,7 +73,7 @@ public class SelectMultiple : Ability
 
         // DETERMINES HOW MANY SELECTIONS THE PLAYER CAN HAVE
         selectMax = Math.Min(maxSelections, Selections.Count());
-        if (Selections.Count() == 0){
+        if (Selections.Count() <= 0){
             yield break;
         }
         // SENDS THE VIABLE SELECTIONS TO THAT CHARACTER
@@ -88,6 +97,9 @@ public class SelectMultiple : Ability
                 break;
             }
         }
+        
+        Selections.SendEndOfSelectionMessage();
+
         yield return null;
     }  
 }

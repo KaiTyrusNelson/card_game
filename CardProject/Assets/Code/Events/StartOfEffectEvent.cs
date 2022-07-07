@@ -6,7 +6,7 @@ using UnityEngine;
 public class StartOfEffectEvent : StackEvent
 {
     // THIS CLASS IS MEANT TO TRACK THE BEGINNING OF ABILITIES SO WE KNOW WHAT EFFECTS WERE ACTIVATED LAST
-
+    public string Id;
     // ACTIVATION DOES NOTHING
     public override IEnumerator Activate()
     {

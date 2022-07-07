@@ -2,6 +2,7 @@ using System.Collections;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 using TMPro;
 using RiptideNetworking;
 
@@ -35,9 +36,26 @@ public class Character : MonoBehaviour
     [SerializeField] string _id;
     public string Id{get=>_id;}
     [SerializeField] ushort _maxHp;
-    public ushort MaxHp{get => _maxHp; set { _maxHp = value; }}
+    // WHEN MAX HP IS INCREASED, THE CURRENT HP SHOULD BE INCREASED ASWELL
+    public ushort MaxHp{get => _maxHp; 
+    set{
+        int difference = value - _maxHp;
+        // if hp went up
+        _maxHp = value;
+
+        if (difference > 0)
+        {
+            Hp += (ushort)difference;
+        }
+        else
+        {
+            // REVALIDATES HP
+            Hp = Hp;
+        }
+     }}
     [SerializeField] ushort _hp;
-    public ushort Hp {get => _hp; set {_hp = value;}}
+    // HP SHOULD BE CONSTRAINED TO MAX HP
+    public ushort Hp {get => _hp; set {_hp = Math.Min(MaxHp, value);}}
     [SerializeField] ushort _attack;
     public ushort Attack {get=>_attack; set{ _attack = value;}}
     [SerializeField] TurnPlayer _player;
@@ -51,11 +69,21 @@ public class Character : MonoBehaviour
     #endregion
 
     // DETERMINES IF THE CHARACTER HAS ATTACKED THIS TURN
-    public bool HasAttacked = false;
+    [SerializeField] public bool HasAttacked = false;
+    [SerializeField] public bool HasSwitched = false;
     #endregion
 
-
-    public CardLocations Location = CardLocations.Deck;
+    CardLocations _location = CardLocations.Deck;
+    public CardLocations Location {
+        get => _location;
+        set{
+            if (value != CardLocations.Board)
+            {
+                ResetToPrefabState();
+            }
+            _location = value;
+        }
+    }
     #region Functions
 
     public bool IsElement(characterElements elm)
@@ -145,28 +173,29 @@ public class Character : MonoBehaviour
             }
         }
     }
+
+    public void ResetToPrefabState()
+    {
+        PrefabUtility.ResetToPrefabState(this.gameObject);
+    }
     public void TakeDamage(ushort damage){
         _hp = (ushort)Math.Max(0, _hp - damage);
     }
 
     public bool AttackCharacter(Character other)
     {
-        if (!HasAttacked)
-        {
-            other.TakeDamage(this.Attack);
-            this.TakeDamage(other.Attack);
-            HasAttacked = true;
+        other.TakeDamage(this.Attack);
+        this.TakeDamage(other.Attack);
+        HasAttacked = true;
+        // TODO: ADD ON COMBAT EFFECTS
+        return true;
 
-            // TODO: ADD ON COMBAT EFFECTS
-            return true;
-        }
-        Debug.Log("This character cannot attack");
-        return false;
     }
 
-    public void ResetAttacked()
+    public void Reset()
     {
         HasAttacked = false;
+        HasSwitched = false;
     }
 
     #endregion

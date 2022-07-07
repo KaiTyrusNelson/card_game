@@ -3,31 +3,28 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class Deck : MonoBehaviour
+public class Deck : CardContainer
 {
-    [SerializeField] List<Character> cards;
-    public List<Character> Cards {get =>cards; private set{cards=value;}}
     [SerializeField] public Player Owner; 
     [SerializeField] TurnPlayer _player;
 
-
+    public void Awake()
+    {
+        location = CardLocations.Deck;
+    }
     public void BeginGame(){
-        cards.Shuffle();
+        Cards.Shuffle();
         // ON THE START ALL PREFAB OBJECTS NEED TO REPLACED WITH REAL OBJECTS
-        for(int i =0; i < cards.Count; i++){
-            cards[i] = Instantiate(cards[i], transform.position, Quaternion.identity);
-            cards[i].transform.SetParent(this.transform);
-            cards[i].Player = _player;
+        for(int i =0; i < Cards.Count; i++){
+            Cards[i] = Instantiate(Cards[i], transform.position, Quaternion.identity);
+            Cards[i].transform.SetParent(this.transform);
+            Cards[i].Player = _player;
         }
     }
 
-    public bool RemoveCard(Character c)
-    {
-        return cards.Remove(c);
-    }
     public void Shuffle()
     {
-        cards.Shuffle();
+        Cards.Shuffle();
     }
 
     public void Display() // FOR TESTING PURPOSES

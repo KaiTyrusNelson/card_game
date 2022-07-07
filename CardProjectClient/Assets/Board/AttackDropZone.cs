@@ -16,7 +16,7 @@ public class AttackDropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler,
    public void OnDrop(PointerEventData eventData)
    {
         Debug.Log("Drop Event Activated");
-        Card d = eventData.pointerDrag.GetComponent<Card>();
+        BoardCard d = eventData.pointerDrag.GetComponent<BoardCard>();
         if (d!=null){
           if (d.Location == Placement.board){
             Debug.Log("Card Found");
@@ -25,7 +25,7 @@ public class AttackDropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler,
         }
    }
 
-   public void SendAttackMessage(Card c)
+   public void SendAttackMessage(BoardCard c)
    {
         Message m = Message.Create(MessageSendMode.reliable, (ushort)ClientToServer.attack);
         m.Add(c.x_location);

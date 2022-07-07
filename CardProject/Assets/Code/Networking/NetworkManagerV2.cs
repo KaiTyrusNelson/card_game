@@ -18,9 +18,11 @@ public enum ClientToServer{
     // ATTACK MESSAGE
     attack,
     // SELECTS A LOCATION
-    clientLocationSelectionMessage
+    clientLocationSelectionMessage,
+    castAbilityFromBoard,
+    // THIS IS FOR ENGAGING SWAP CHAINING, THIS ALLOWS CARDS TO BLOCK AND SUCH
+    swapMessage,
 };
-
 
 public enum ServerToClient{
     // MESSAGE FOR WHEN A CARD IS SUMMONED ONTO THE BOARD
@@ -37,14 +39,28 @@ public enum ServerToClient{
     chainRequest,
     // MESSAGE TO BE SENT TO OTHER CLIENT INFORMING THEY ARE WAITING FOR A RESPONSE FROM THE OTHER PLAYER
     sendActingPlayer,
+    sendWaitingPlayer,
     // MESSAGE FOR WHEN WE REQUEST THE CLIENT TO MAKE A SELECTION TODO
     selectionRequest,
+    // CONFIRMS THAT THE SELECTION WINDOW HAS ENDED TO THE CLIENT
+    confirmSelectionEnd,
     // MESSAGE CONFIRMING PLAYER IDENTITY
     playerIdentityPacket,
     // Message remove card from board
     removeMessage,
     // LOCATION SELECTION REQUEST
     locationSelectionRequest,
+    boardUpdate,
+    boardUpdateEnemy,
+
+    // USED FOR DISPLAYS THE SEQUENCE OF EFFECTS ON THE BOARD
+    effectBegin,
+    effectResolve,
+    chainBuildMessage,
+
+    // USED FOR DETERMINING WHEN AN ATTACK IS TAKING PLACE
+    attackDeclareEvent,
+    attackResolveEvent,
 }
 
 public class NetworkManagerV2 : MonoBehaviour
@@ -78,7 +94,6 @@ public class NetworkManagerV2 : MonoBehaviour
     public void FixedUpdate(){
         server.Tick();
     }
-
     public void Start(){
         RiptideLogger.Initialize(Debug.Log, Debug.Log, Debug.LogWarning, Debug.LogError, false);
 
@@ -87,23 +102,18 @@ public class NetworkManagerV2 : MonoBehaviour
         server.ClientDisconnected += PlayerLeft;
         server.Start(port, maxClients );
     }
-
     private void OnApplicationQuit()
     {
         server.Stop();
         server.ClientConnected -= NewPlayerConnected;
         server.ClientDisconnected -= PlayerLeft;
     }
-
     private void NewPlayerConnected(object sender, ServerClientConnectedEventArgs e)
     {
         Debug.Log("New Player Connected");
     }
-
     private void PlayerLeft(object sender, ClientDisconnectedEventArgs e)
     {
         Debug.Log("Player has left");
-    }
-
-    
+    }   
 }

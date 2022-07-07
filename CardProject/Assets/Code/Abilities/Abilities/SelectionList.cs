@@ -36,6 +36,27 @@ public class SelectionList
         }
         return true;
     }
+    public void AddDeck(TurnPlayer _player)
+    {
+        bool ally;
+        if (_player == _ownerplayer){
+            ally = true;
+        }else{
+            ally=false;
+        }
+
+        foreach (Character c in Manager.Players[_player].PlayerDeck.Cards)
+        {
+            if (c != null)
+            {
+                if (CheckConditions(c)){
+                    Iteratable iter = new Iteratable();
+                    iter.c =  c;
+                    iterationList.Add(iter);                                                            
+                }
+            }
+        }
+    }
 
     public void AddHand(TurnPlayer _player)
     {
@@ -109,6 +130,12 @@ public class SelectionList
 
 
     #region Messages
+
+    public void SendEndOfSelectionMessage()
+    {
+        Message m = Message.Create(MessageSendMode.reliable, (ushort)ServerToClient.confirmSelectionEnd);
+        NetworkManagerV2.Instance.server.Send(m ,(ushort)_ownerplayer);
+    }
     public void SendMesssage(int minSelections, int maxSelections)
     {
         Message m = Message.Create(MessageSendMode.reliable, (ushort)ServerToClient.selectionRequest);

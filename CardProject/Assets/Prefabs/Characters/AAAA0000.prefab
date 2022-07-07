@@ -457,7 +457,6 @@ MonoBehaviour:
   element: 0
   attributes: 
   HasAttacked: 0
-  Location: 1
   attackTextBox: {fileID: 3042492365398784855}
   defenseTextBox: {fileID: 3042492364987581407}
 --- !u!1 &4189832900783795202
@@ -469,7 +468,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 480068048358730547}
-  - component: {fileID: 8295679015323375811}
+  - component: {fileID: 980948038171410964}
   m_Layer: 0
   m_Name: DamageEvent
   m_TagString: Untagged
@@ -492,7 +491,7 @@ Transform:
   m_Father: {fileID: 7900204469978766764}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8295679015323375811
+--- !u!114 &980948038171410964
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -501,7 +500,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 4189832900783795202}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 28e54090a844df04bb6ad7252d459df2, type: 3}
+  m_Script: {fileID: 11500000, guid: 96b265077905a784e9a71565b5c31c50, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   AssociatedPlayer: 0
@@ -626,7 +625,7 @@ PrefabInstance:
     - target: {fileID: -5814652295438857503, guid: 3eadccb70b1cc394ca6c3fcbf631ecd0, type: 3}
       propertyPath: _evt
       value: 
-      objectReference: {fileID: 8295679015323375811}
+      objectReference: {fileID: 980948038171410964}
     - target: {fileID: -5814652295438857503, guid: 3eadccb70b1cc394ca6c3fcbf631ecd0, type: 3}
       propertyPath: _damage
       value: 10

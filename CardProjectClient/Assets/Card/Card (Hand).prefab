@@ -12,11 +12,10 @@ GameObject:
   - component: {fileID: 3295499690277574862}
   - component: {fileID: 1871192334748203389}
   - component: {fileID: 4714230303709535856}
-  - component: {fileID: 6219853834244441597}
   - component: {fileID: 3947703650676564557}
-  - component: {fileID: 2602334070770381905}
+  - component: {fileID: 2709267829023698323}
   m_Layer: 5
-  m_Name: Card
+  m_Name: Card (Hand)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -93,23 +92,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   returnTo: {fileID: 0}
---- !u!114 &6219853834244441597
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3178092767771551740}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cdbeb2e6e7fc55949ac8bd9f8b77898a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Id: 
-  Hp: 0
-  Attack: 0
-  ManaCost: 0
-  LocationInHand: 0
 --- !u!225 &3947703650676564557
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -122,7 +104,7 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!114 &2602334070770381905
+--- !u!114 &2709267829023698323
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -131,8 +113,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 3178092767771551740}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0ea4fb3968d2d504085b3e72a3460506, type: 3}
+  m_Script: {fileID: 11500000, guid: 88c3f09f6ec011c49a54dc59e263f116, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Hp: 0
+  Attack: 0
+  ManaCost: 0
+  Location: 0
+  _id: 
   target: {fileID: 1871192334748203389}
-  card: {fileID: 6219853834244441597}
+  LocationInHand: 0

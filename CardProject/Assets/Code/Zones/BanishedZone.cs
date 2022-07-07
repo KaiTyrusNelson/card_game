@@ -3,24 +3,12 @@ using System.Collections.Generic;
 
 
 /// <summary> The graveyard is the zone in which the cards go when they die<summary>
-public class BanishedZone: MonoBehaviour{
-    [SerializeField] List<Character> cards;
-    public List<Character> Cards {get=>cards; set{cards=value;}}
+public class BanishedZone: CardContainer{
+    public void Awake()
+    {
+        location = CardLocations.Banished;
+    }
     [SerializeField] public Player Owner; 
-
-    public void AddCard(Character c)
-    {
-        cards.Add(c);
-        c.transform.SetParent(this.transform);
-        // if the card is dead it should be set back to max hp
-        c.Hp = c.MaxHp;
-        c.Location = CardLocations.Banished;
-    }
-    
-    public bool RemoveCard(Character c)
-    {
-        return cards.Remove(c);
-    }
     #region DisplayFunctions
     public void Update()
     {
@@ -33,5 +21,6 @@ public class BanishedZone: MonoBehaviour{
             c.transform.position = transform.position +new Vector3(.1f*i++, 0 ,0);
         }
     }
+
     #endregion
 }

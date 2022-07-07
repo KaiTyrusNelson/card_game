@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using RiptideNetworking;
 
 // TODO: CREATE MULTIPLE KINDS OF EFFECTS
 public abstract class Ability : MonoBehaviour
@@ -27,9 +27,12 @@ public abstract class Ability : MonoBehaviour
     // TODO: ADD TWO PART EFFECTS / CONDITIONAL EFFECTS
     public IEnumerator Activate(bool seperateEffect = true)
     {
-        // if it is a seperate effect
+        // if the effect is not a continuation of a previous effect
         if (seperateEffect)
-            Manager.Singleton.AddEffectStartToEventStack();
+        {
+            Manager.Singleton.AddEffectStartToEventStack(AssociatedCard.Id);
+            SendEffectActivationMessage();
+        }
 
         // INFORMS THE CLIENTS WHO IS PLAYING THEIR CARD
         ResponseMessages.SendActingPlayer(AssociatedCard.Player);
@@ -42,9 +45,27 @@ public abstract class Ability : MonoBehaviour
         {
             yield return StartCoroutine(_followUp.Activate(seperateEffect : false));
         }
+        else
+        {
+            // IF THERE IS NO FOLLOWUP WE WILL ADD THE END OF EFFECT INDICATOR TO THE TOP OF THE STACK
+            GameObject g = new GameObject();
+            // ADDS THE NECCECARY EFFECT TO THE CARD
+            EndOfEffectEvent evt = g.AddComponent<EndOfEffectEvent>();
+            evt.Id = AssociatedCard.Id;
+            Manager.Singleton.StackPush(evt);
+            // ALLOWS THE CLIENTS TO SEE THE CURRENT STACK OF EVENTS
+            Manager.SendStackEventState();
+        }
         // INFORMS THE USER OF EFFECT RESOLVE
         Debug.Log("Effect has resolved");
     }  
+
+    public void SendEffectActivationMessage()
+    {
+        Message m = Message.Create(MessageSendMode.reliable, (ushort)ServerToClient.effectBegin);
+        m.Add(AssociatedCard.Id);
+        NetworkManagerV2.Instance.server.SendToAll(m);
+    }
 
     /// <summary> This is the innate condition required to activate the ability<summary>
     public virtual bool CheckSelfCondition()

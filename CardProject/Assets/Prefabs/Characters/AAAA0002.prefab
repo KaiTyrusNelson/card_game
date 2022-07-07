@@ -457,7 +457,6 @@ MonoBehaviour:
   element: 0
   attributes: 
   HasAttacked: 0
-  Location: 1
   attackTextBox: {fileID: 3042492365398784855}
   defenseTextBox: {fileID: 3042492364987581407}
 --- !u!1 &6109806339873236255
@@ -469,7 +468,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8718286163428075276}
-  - component: {fileID: 7021604616421740359}
+  - component: {fileID: 2420326012254239442}
   m_Layer: 0
   m_Name: SummonEvent
   m_TagString: Untagged
@@ -492,7 +491,7 @@ Transform:
   m_Father: {fileID: 3775807407938290282}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7021604616421740359
+--- !u!114 &2420326012254239442
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -501,7 +500,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6109806339873236255}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f679b2649fcca8e42b9668bf44c0a737, type: 3}
+  m_Script: {fileID: 11500000, guid: 5fc23fbaaecea0c4399b95411d0cfa04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   AssociatedPlayer: 0
@@ -552,7 +551,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AssociatedCard: {fileID: 3042492365951957778}
-  _evt: {fileID: 7021604616421740359}
+  _evt: {fileID: 2420326012254239442}
+  instant: 0
 --- !u!1001 &8640169197129506439
 PrefabInstance:
   m_ObjectHideFlags: 0

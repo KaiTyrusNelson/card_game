@@ -280,7 +280,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d69c85d54b68ba64080b125755f9d82a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cards: []
+  Cards: []
   Owner: {fileID: 1233239851}
 --- !u!1 &238301925
 GameObject:
@@ -356,7 +356,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d876e80b74a11143a793a0b7eacd05e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cards: []
+  Cards: []
   MaxSize: 6
   Owner: {fileID: 1233239851}
   Player: 1
@@ -404,27 +404,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f58c616bdab01f64f89cef4ac62cb8a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cards:
+  Cards:
+  - {fileID: 3042492365951957778, guid: 0eb11087523cf67439028674520ad6b2, type: 3}
+  - {fileID: 3042492365951957778, guid: 0eb11087523cf67439028674520ad6b2, type: 3}
+  - {fileID: 3042492365951957778, guid: 0eb11087523cf67439028674520ad6b2, type: 3}
+  - {fileID: 3042492365951957778, guid: 71769ad69b0c32b4abeeac509170f990, type: 3}
+  - {fileID: 3042492365951957778, guid: 71769ad69b0c32b4abeeac509170f990, type: 3}
+  - {fileID: 3042492365951957778, guid: 71769ad69b0c32b4abeeac509170f990, type: 3}
+  - {fileID: 3042492365951957778, guid: b22194fc7f1880a4f97cea5bea9235c5, type: 3}
+  - {fileID: 3042492365951957778, guid: b22194fc7f1880a4f97cea5bea9235c5, type: 3}
   - {fileID: 3042492365951957778, guid: b22194fc7f1880a4f97cea5bea9235c5, type: 3}
   - {fileID: 3042492365951957778, guid: 0eb11087523cf67439028674520ad6b2, type: 3}
   - {fileID: 3042492365951957778, guid: 0eb11087523cf67439028674520ad6b2, type: 3}
-  - {fileID: 3042492365951957778, guid: 71769ad69b0c32b4abeeac509170f990, type: 3}
-  - {fileID: 3042492365951957778, guid: 71769ad69b0c32b4abeeac509170f990, type: 3}
   - {fileID: 3042492365951957778, guid: 0eb11087523cf67439028674520ad6b2, type: 3}
-  - {fileID: 3042492365951957778, guid: 71769ad69b0c32b4abeeac509170f990, type: 3}
   - {fileID: 3042492365951957778, guid: 0eb11087523cf67439028674520ad6b2, type: 3}
   - {fileID: 3042492365951957778, guid: 120030a0f0cf81049973ed52567ef13d, type: 3}
-  - {fileID: 3042492365951957778, guid: 71769ad69b0c32b4abeeac509170f990, type: 3}
-  - {fileID: 3042492365951957778, guid: 120030a0f0cf81049973ed52567ef13d, type: 3}
-  - {fileID: 3042492365951957778, guid: 71769ad69b0c32b4abeeac509170f990, type: 3}
-  - {fileID: 3042492365951957778, guid: 71769ad69b0c32b4abeeac509170f990, type: 3}
-  - {fileID: 3042492365951957778, guid: 0eb11087523cf67439028674520ad6b2, type: 3}
-  - {fileID: 3042492365951957778, guid: 71769ad69b0c32b4abeeac509170f990, type: 3}
   - {fileID: 3042492365951957778, guid: 120030a0f0cf81049973ed52567ef13d, type: 3}
   - {fileID: 3042492365951957778, guid: 120030a0f0cf81049973ed52567ef13d, type: 3}
   - {fileID: 3042492365951957778, guid: 71769ad69b0c32b4abeeac509170f990, type: 3}
-  - {fileID: 3042492365951957778, guid: 120030a0f0cf81049973ed52567ef13d, type: 3}
-  - {fileID: 3042492365951957778, guid: 0eb11087523cf67439028674520ad6b2, type: 3}
+  - {fileID: 3042492365951957778, guid: 71769ad69b0c32b4abeeac509170f990, type: 3}
+  - {fileID: 3042492365951957778, guid: b22194fc7f1880a4f97cea5bea9235c5, type: 3}
+  - {fileID: 3042492365951957778, guid: b22194fc7f1880a4f97cea5bea9235c5, type: 3}
   Owner: {fileID: 2034070050}
   _player: 2
 --- !u!4 &295345213
@@ -742,25 +742,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f58c616bdab01f64f89cef4ac62cb8a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cards:
-  - {fileID: 3042492365951957778, guid: b22194fc7f1880a4f97cea5bea9235c5, type: 3}
+  Cards:
+  - {fileID: 3042492365951957778, guid: 0eb11087523cf67439028674520ad6b2, type: 3}
+  - {fileID: 3042492365951957778, guid: 0eb11087523cf67439028674520ad6b2, type: 3}
+  - {fileID: 3042492365951957778, guid: 0eb11087523cf67439028674520ad6b2, type: 3}
+  - {fileID: 3042492365951957778, guid: 0eb11087523cf67439028674520ad6b2, type: 3}
   - {fileID: 3042492365951957778, guid: 0eb11087523cf67439028674520ad6b2, type: 3}
   - {fileID: 3042492365951957778, guid: 120030a0f0cf81049973ed52567ef13d, type: 3}
-  - {fileID: 3042492365951957778, guid: b22194fc7f1880a4f97cea5bea9235c5, type: 3}
-  - {fileID: 3042492365951957778, guid: b22194fc7f1880a4f97cea5bea9235c5, type: 3}
-  - {fileID: 3042492365951957778, guid: 71769ad69b0c32b4abeeac509170f990, type: 3}
-  - {fileID: 3042492365951957778, guid: 0eb11087523cf67439028674520ad6b2, type: 3}
-  - {fileID: 3042492365951957778, guid: 71769ad69b0c32b4abeeac509170f990, type: 3}
   - {fileID: 3042492365951957778, guid: 120030a0f0cf81049973ed52567ef13d, type: 3}
-  - {fileID: 3042492365951957778, guid: 71769ad69b0c32b4abeeac509170f990, type: 3}
-  - {fileID: 3042492365951957778, guid: b22194fc7f1880a4f97cea5bea9235c5, type: 3}
-  - {fileID: 3042492365951957778, guid: b22194fc7f1880a4f97cea5bea9235c5, type: 3}
+  - {fileID: 3042492365951957778, guid: 120030a0f0cf81049973ed52567ef13d, type: 3}
   - {fileID: 3042492365951957778, guid: 120030a0f0cf81049973ed52567ef13d, type: 3}
   - {fileID: 3042492365951957778, guid: 71769ad69b0c32b4abeeac509170f990, type: 3}
   - {fileID: 3042492365951957778, guid: 71769ad69b0c32b4abeeac509170f990, type: 3}
   - {fileID: 3042492365951957778, guid: 71769ad69b0c32b4abeeac509170f990, type: 3}
   - {fileID: 3042492365951957778, guid: 71769ad69b0c32b4abeeac509170f990, type: 3}
-  - {fileID: 3042492365951957778, guid: 120030a0f0cf81049973ed52567ef13d, type: 3}
+  - {fileID: 3042492365951957778, guid: 71769ad69b0c32b4abeeac509170f990, type: 3}
+  - {fileID: 3042492365951957778, guid: b22194fc7f1880a4f97cea5bea9235c5, type: 3}
+  - {fileID: 3042492365951957778, guid: b22194fc7f1880a4f97cea5bea9235c5, type: 3}
+  - {fileID: 3042492365951957778, guid: b22194fc7f1880a4f97cea5bea9235c5, type: 3}
+  - {fileID: 3042492365951957778, guid: b22194fc7f1880a4f97cea5bea9235c5, type: 3}
   - {fileID: 3042492365951957778, guid: b22194fc7f1880a4f97cea5bea9235c5, type: 3}
   - {fileID: 3042492365951957778, guid: b22194fc7f1880a4f97cea5bea9235c5, type: 3}
   Owner: {fileID: 1233239851}
@@ -1092,7 +1092,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d876e80b74a11143a793a0b7eacd05e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cards: []
+  Cards: []
   MaxSize: 6
   Owner: {fileID: 2034070050}
   Player: 2
@@ -1538,6 +1538,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e4e05d997ee42040942c840e8d164c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Cards: []
   cards: []
   Owner: {fileID: 1233239851}
 --- !u!4 &1068467867
@@ -1740,7 +1741,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d69c85d54b68ba64080b125755f9d82a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cards: []
+  Cards: []
   Owner: {fileID: 2034070050}
 --- !u!1 &1306079649
 GameObject:
@@ -1939,6 +1940,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e4e05d997ee42040942c840e8d164c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Cards: []
   cards: []
   Owner: {fileID: 2034070050}
 --- !u!4 &1785708393

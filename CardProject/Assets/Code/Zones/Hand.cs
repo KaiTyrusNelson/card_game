@@ -3,21 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using RiptideNetworking;
 
-public class Hand : MonoBehaviour
+public class Hand : CardContainer
 {
-    [SerializeField] List<Character> cards;
-    public List<Character> Cards {get =>cards; private set{cards=value;}}
     [SerializeField] public int MaxSize;
     [SerializeField] public Player Owner; 
     [SerializeField] public TurnPlayer Player;
 
-    public int GetCount(){
-        return cards.Count;
-    }
-
-    public bool RemoveCard(Character c)
+    public override bool RemoveCard(Character c)
     {
-        int location = cards.IndexOf(c);
+        int location = Cards.IndexOf(c);
         if (location == -1)
         {
             return false;
@@ -25,38 +19,32 @@ public class Hand : MonoBehaviour
         RemoveCard(location);
         return true;
     }
-
-    public Character GetCard(int loc){
-        if (loc >= cards.Count || loc<0)
-            return null;
-        return cards[loc];
-    }
     public bool IsFullHand(){
-        if (cards.Count <MaxSize){
+        if (Cards.Count <MaxSize){
             return false;
         }else{
             return true;
         }
     }
-    public void AddCard(Character c){
+    public override void AddCard(Character c){
         c.transform.SetParent(this.transform);
-        cards.Add(c);
+        Cards.Add(c);
         // INFORMS THE CLIENTS ABOUT THE DRAWN CARDS--
         SendSelfDrawMessage(Player, c);
         SendOpponentDrawMessage(Player.OppositePlayer());
         c.Location = CardLocations.Hand;
     }
 
-    public void RemoveCard(int position)
+    public override void RemoveCard(int position)
     {
-        cards.RemoveAt(position);
+        Cards.RemoveAt(position);
         // INFORMS THE CLIENTS ABOUT THE REMOVED CARD
         SendSelfRemoveCardMessage(Player, position);
         SendOpponentRemoveCardMessage(Player.OppositePlayer(), position);
     }
     public IEnumerator PlayCardFromPosition(int position, int x, int y)
     {
-        Character c = cards[position];
+        Character c = Cards[position];
         RemoveCard(position);
         yield return Owner.PlayerBoard.SetAt(c,x,y);
     }   
